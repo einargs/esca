@@ -1,0 +1,76 @@
+/* Center the form */
+\:host
+  display: flex
+  flex-grow: 1
+  justify-content: center
+
+/* Use flexbox for the form */
+.detail-body
+  display: flex
+  flex-flow: row wrap
+  margin: 15pt
+
+
+// Set an element to full width in the form flexbox
+=full-width
+  flex: 1 100%
+
+/* Recipe title is a full-width block */
+.recipe-title
+  order: 1
+  display: block
+  +full-width
+
+/* Recipe stat field container is a full-width flex container */
+.recipe-stats
+  order: 2
+  display: flex
+  flex-flow: row wrap
+  +full-width
+
+/* Recipe stat fields take up an equal amount of space in their container */
+.recipe-stat
+  flex: 1 0
+
+/* Recipe ingredients list is a full-width container */
+.recipe-ingredients
+  order: 3
+  display: block
+  +full-width
+
+/* The delete ingredient icon is normally transparent */
+.delete-ingredient-icon
+  opacity: 0.4
+
+/* When the ingredient item is hovered over, the icon becomes visible */
+.recipe-ingredient:hover .delete-ingredient-icon
+  opacity: 1
+
+/**/
+.add-recipe-ingredient
+  width: 100%
+
+/* Recipe instruction text field is a full-width block */
+.recipe-instructions
+  order: 4
+  display: block
+  +full-width
+  //margin-top: 15pt
+
+  // Style the actual textarea
+  textarea
+    /* Actual text area height is 90pt */
+    height: 90pt
+    /* The actual textarea doesn't resize */
+    resize: none
+
+/**/
+@media all and (min-width: 650px)
+  .recipe-ingredients
+    order: 2
+    flex: 2 0
+
+  .recipe-stats
+    order: 3
+    flex: 1 0
+    flex-flow: column nowrap

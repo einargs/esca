@@ -1,0 +1,19 @@
+<md-nav-list class="list">
+  <md-list-item
+    *ngFor="let recipe of recipes | async"
+    class="recipe-item">
+    <a md-line
+      [routerLink]="['/recipe', recipe.$key]">{{recipe.name}}</a>
+    <button md-icon-button
+      (click)="deleteRecipe(recipe)"
+      type="button"
+      class="delete-recipe">
+      <md-icon class="delete-recipe-icon">delete</md-icon>
+    </button>
+  </md-list-item>
+</md-nav-list>
+<button md-fab
+  (click)="newRecipe()"
+  class="new-recipe">
+  <md-icon>add</md-icon>
+</button>

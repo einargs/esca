@@ -1,0 +1,42 @@
+<form *ngIf="recipe"
+  class="detail-body">
+  <md-input-container class="recipe-title mat-h1">
+    <input mdInput
+      [(ngModel)]="recipe.name" type="text"
+      placeholder="Name" name="name" />
+  </md-input-container>
+
+  <div class="recipe-stats">
+    <md-input-container class="recipe-time recipe-stat">
+      <input mdInput
+        [(ngModel)]="recipe.time" type="number"
+        placeholder="Time" name="time" />
+    </md-input-container>
+  </div>
+
+  <md-list class="recipe-ingredients">
+    <md-list-item
+      *ngFor="let ingredient of Object.keys(recipe.ingredients || {})"
+      class="recipe-ingredient">
+      <span md-line>{{ingredient}}</span>
+      <button md-icon-button
+        (click)="deleteIngredient(ingredient)"
+        type="button">
+        <md-icon class="delete-ingredient-icon">delete</md-icon>
+      </button>
+    </md-list-item>
+    <md-list-item>
+      <md-input-container class="add-recipe-ingredient">
+        <input mdInput #addIngredientInput
+          (keyup.enter)="addIngredient(addIngredientInput.value); addIngredientInput.value = ''"
+          placeholder="Add Ingredient" name="addIngredient" />
+      </md-input-container>
+    </md-list-item>
+  </md-list>
+
+  <md-input-container class="recipe-instructions mat-body-2">
+    <textarea mdInput
+      [(ngModel)]="recipe.instructions"
+      placeholder="Instructions" name="instructions"></textarea>
+  </md-input-container>
+</form>
