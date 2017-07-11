@@ -19,16 +19,33 @@ export class RecipeService {
     return this.db.list("/recipe");
   }
 
+  getUserRecipes(userId: string): Observable<Recipe[]> {
+    return this.db.list("/recipe", {
+      query: {
+        orderByChild: "owner_id",
+        equalTo: userId
+      }
+    });
+  }
+
+  getCurrentUserRecipes(): Observable<Recipe[]> {
+    return this.db.list("/recipe", {
+      query: {
+        orderByChild: "owner_id",
+        equalTo: this.userService.userId
+      }
+    });
+  }
+
   getRecipe(id: string): Observable<Recipe> {
     return this.db.object(`/recipe/${id}`);
   }
 
   // Create a brand-new recipe
   async newRecipe(): Promise<string> {
-    if (!this.userService.signedIn)
-      throw Error("User not logged in");
+    let uid = this.userService.userId;
 
-    let uid = await this.userService.getUserId();
+    if (!uid) throw Error("User not logged in");
 
     return this.db.list("/recipe").push(new Recipe(uid)).key;
   }
@@ -40,6 +57,20 @@ export class RecipeService {
     await this.db.list("/recipe").remove(id);
   }
 
+  // Save a recipe
+  async saveRecipe(recipe: Recipe): Promise<void> {
+    if (!recipe) throw Error("Must pass recipe to be saved");
+
+    let {
+      $key, owner_id="", name="", time=0,
+      ingredients=[], instructions=""
+    } = recipe;
+
+    await this.db.object(`/recipe/${$key}`).update({
+      owner_id, name, time, ingredients, instructions
+    });
+  }
+
 
   // Add an ingredient to a recipe
   // Here because the recipe class works more as an interface than a class
@@ -48,12 +79,12 @@ export class RecipeService {
     if (recipe && ingredient)
       // If the ingredients field does exist
       if (recipe.ingredients)
-        // Store the ingredient in a set-like fashion
-        recipe.ingredients[ingredient] = true;
+        // Push the ingredient on
+        recipe.ingredients.push(ingredient);
       // If the ingredients field doesn't exist
       else
-        // Set it to an object with the ingredient already stored
-        recipe.ingredients = { [ingredient]: true };
+        // Set it to an array with the ingredient already stored
+        recipe.ingredients = [ingredient];
   }
 
   // Delete an ingredient from a recipe
@@ -62,9 +93,13 @@ export class RecipeService {
     // Ensure there is a recipe and an ingredient
     if (recipe && ingredient)
       // Ensure the ingredients field exists
-      if (recipe.ingredients)
-        // Delete the ingredient
-        delete recipe.ingredients[ingredient];
-        // It doesn't matter if the ingredient didn't exist
+      if (recipe.ingredients) {
+        // Find the index of the ingredient
+        let i = recipe.ingredients.indexOf(ingredient);
+        // If the ingredient exists (i.e., the index isn't -1)
+        if (i !== -1)
+          // Delete the ingredient
+          recipe.ingredients.splice(i - 1, 1);
+      }
   }
 }

@@ -1,5 +1,7 @@
 import { Observable }       from "rxjs/Observable";
+import { BehaviorSubject }  from "rxjs/BehaviorSubject";
 import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/multicast';
 
 import { Injectable }       from '@angular/core';
 import { AngularFireAuth }  from "angularfire2/auth";
@@ -9,28 +11,27 @@ import { User }             from "./user";
 
 @Injectable()
 export class UserService {
-  user: Observable<User>;
-  private actualUser: User; //TODO: Refactor this mess to use observables properly (however the hell that is)
-
-  get signedIn(): boolean {
-    return Boolean(this.actualUser);
-  }
+  //TODO: Refactor this mess to use rxjs properly (however that is)
+  userSubject: BehaviorSubject<User> = new BehaviorSubject(null);
+  user: User;
+  userIdSubject: BehaviorSubject<string> = new BehaviorSubject(null);
+  userId: string;
+  signedIn: boolean;
 
   constructor(private afAuth: AngularFireAuth) {
-    this.user = afAuth.authState.map(user => user ? new User(user.uid) : null);
+    afAuth.authState
+      .map(user => user ? new User(user.uid) : null)
+      .multicast(this.userSubject).connect();
 
-    this.user.subscribe(user => {
-      this.actualUser = user;
+    // Set up user id subject
+    this.userSubject
+      .map(user => user ? user.id : null)
+      .multicast(this.userIdSubject).connect();
+
+    this.userSubject.subscribe(user => {
+      this.signedIn = Boolean(user);
+      this.userId = user ? user.id : null;
+      this.user = user;
     });
-  }
-
-  // Get the user
-  async getUser(): Promise<User> {
-    return this.signedIn ? this.actualUser : null;
-  }
-
-  // Get the user id
-  async getUserId(): Promise<string> {
-    return this.signedIn ? this.actualUser.id : null;
   }
 }
