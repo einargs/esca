@@ -1,4 +1,6 @@
-import { Component, Input } from '@angular/core';
+import { Component }    from '@angular/core';
+
+import { UserService }  from "../user/user.service";
 
 @Component({
   selector: 'app-nav',
@@ -6,5 +8,5 @@ import { Component, Input } from '@angular/core';
   styleUrls: ['./app-nav.component.sass']
 })
 export class AppNavComponent {
-  @Input() links: any[];
+  constructor(private userService: UserService) {}
 }
