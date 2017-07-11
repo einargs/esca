@@ -8,5 +8,5 @@ import { UserService }  from "../user/user.service";
   styleUrls: ['./app-nav.component.sass']
 })
 export class AppNavComponent {
-  constructor(private userService: UserService) {}
+  constructor(public userService: UserService) {}
 }

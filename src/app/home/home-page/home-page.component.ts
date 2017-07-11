@@ -5,6 +5,6 @@ import { Component } from '@angular/core';
   templateUrl: './home-page.component.html',
   styleUrls: ['./home-page.component.sass']
 })
-export class HomePageComponent implements OnInit {
+export class HomePageComponent {
 
 }
