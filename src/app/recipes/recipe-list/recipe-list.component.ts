@@ -17,7 +17,8 @@ import { UserService }                      from "../../user/user.service";
   styleUrls: [ "./recipe-list.component.sass" ]
 })
 export class RecipeListComponent {
-  recipes = this.service.getRecipes();
+  //TODO:Flatten this to use a gist of a user's recipes stored seperately
+  recipes = this.service.getCurrentUserRecipes();
 
   constructor(
     private route:    ActivatedRoute,
@@ -43,10 +44,10 @@ export class RecipeListComponent {
   }
 
   // Delete a recipe
-  async deleteRecipe(recipe: Recipe): Promise<void> {
+  async deleteRecipe(id: string): Promise<void> {
     let confirmation = await this.openDeleteRecipeDialog();
-    console.log(recipe);
+
     if (confirmation)
-      await this.service.deleteRecipe(recipe.$key);
+      await this.service.deleteRecipe(id);
   }
 }

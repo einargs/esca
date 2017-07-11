@@ -1,3 +1,4 @@
+//import { Observable }                       from "rxjs/Observable";
 import 'rxjs/add/operator/switchMap';
 
 import { Component, OnInit }                from '@angular/core';
@@ -30,11 +31,16 @@ export class RecipeDetailComponent {
     this.service.deleteIngredientFrom(this.recipe, ingredient);
   }
 
+  // Save the recipe
+  save(): void {
+    this.service.saveRecipe(this.recipe);
+  }
+
   ngOnInit(): void {
       this.route.paramMap
-        .switchMap((params: ParamMap) => this.service.getRecipe(params.get("id")))
+        .switchMap((params: ParamMap) =>
+          this.service.getRecipe(params.get("id")))
         .subscribe(recipe => {
-          console.log(recipe);
           this.recipe = recipe;
         });
   }

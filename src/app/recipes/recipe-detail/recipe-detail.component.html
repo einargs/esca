@@ -1,4 +1,5 @@
 <form *ngIf="recipe"
+  #recipeForm="ngForm"
   class="detail-body">
   <md-input-container class="recipe-title mat-h1">
     <input mdInput
@@ -16,7 +17,7 @@
 
   <md-list class="recipe-ingredients">
     <md-list-item
-      *ngFor="let ingredient of Object.keys(recipe.ingredients || {})"
+      *ngFor="let ingredient of recipe.ingredients"
       class="recipe-ingredient">
       <span md-line>{{ingredient}}</span>
       <button md-icon-button
@@ -40,3 +41,10 @@
       placeholder="Instructions" name="instructions"></textarea>
   </md-input-container>
 </form>
+
+<button md-fab
+  [disabled]="!recipe"
+  (click)="save()"
+  class="save-button">
+  <md-icon>save</md-icon>
+</button>

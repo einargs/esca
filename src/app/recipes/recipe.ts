@@ -5,7 +5,7 @@ export class Recipe {
     public owner_id: string,
     public name = "",
     public time = 0,
-    public ingredients = {},
+    public ingredients: string[] = [],
     public instructions = ""
   ) {}
 }
