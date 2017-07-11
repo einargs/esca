@@ -32,7 +32,7 @@ export class RecipeService {
     return this.db.list("/recipe", {
       query: {
         orderByChild: "owner_id",
-        equalTo: this.userService.userId
+        equalTo: this.userService.userIdSubject
       }
     });
   }
