@@ -12,6 +12,7 @@ import { NotFoundComponent }      from "./not-found.component";
 
 import { ImportsModule }          from './imports/imports.module';
 import { FireSetupModule }        from "./fire-setup.module";
+import { HomeModule }             from "./home/home.module";
 import { RecipesModule }          from "./recipes/recipes.module";
 import { AppRoutingModule }       from "./app-routing.module";
 import { UserService }            from "./user/user.service";
@@ -22,6 +23,7 @@ import { UserService }            from "./user/user.service";
     FormsModule,
     FireSetupModule,
     ImportsModule,
+    HomeModule,
     RecipesModule,
     AppRoutingModule
   ],
