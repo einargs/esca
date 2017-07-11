@@ -7,7 +7,4 @@ import { Component } from '@angular/core';
 })
 export class AppComponent  {
   title = 'Esca';
-  links = [
-    { name: "My Recipes", url: "/recipe" }
-  ];
 }
