@@ -47,7 +47,14 @@ export class RecipeService {
 
     if (!uid) throw Error("User not logged in");
 
-    return this.db.list("/recipe").push(new Recipe(uid)).key;
+    return this.db.list("/recipe").push({
+      owner_id: uid,
+      name: "",
+      tags: [],
+      time: 0,
+      ingredients: [],
+      instructions: []
+    }).key;
   }
 
   // Delete a recipe
