@@ -7,6 +7,12 @@
       placeholder="Name" name="name" />
   </md-input-container>
 
+  <md-input-container class="recipe-tags">
+    <input mdInput
+      [(ngModel)]="tagsAlias" type="text"
+      placeholder="Tags" name="tags" />
+  </md-input-container>
+
   <div class="recipe-stats">
     <md-input-container class="recipe-time recipe-stat">
       <input mdInput

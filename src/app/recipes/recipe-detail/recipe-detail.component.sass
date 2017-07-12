@@ -21,9 +21,15 @@
   display: block
   +full-width
 
+/* Recipe tags are a full width block */
+.recipe-tags
+  order: 2
+  display: block
+  +full-width
+
 /* Recipe stat field container is a full-width flex container */
 .recipe-stats
-  order: 2
+  order: 3
   display: flex
   flex-flow: row wrap
   +full-width
@@ -34,7 +40,7 @@
 
 /* Recipe ingredients list is a full-width container */
 .recipe-ingredients
-  order: 3
+  order: 4
   display: block
   +full-width
 
@@ -52,7 +58,7 @@
 
 /* Recipe instruction text field is a full-width block */
 .recipe-instructions
-  order: 4
+  order: 5
   display: block
   +full-width
   //margin-top: 15pt
@@ -67,11 +73,11 @@
 /**/
 @media all and (min-width: 650px)
   .recipe-ingredients
-    order: 2
+    order: 3
     flex: 2 0
 
   .recipe-stats
-    order: 3
+    order: 4
     flex: 1 0
     flex-flow: column nowrap
 

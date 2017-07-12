@@ -8,7 +8,8 @@ import {
   MdSidenavModule,
   MdButtonModule,
   MdButtonToggleModule,
-  MdDialogModule
+  MdDialogModule,
+  MdChipsModule
 } from "@angular/material";
 
 @NgModule({
@@ -21,7 +22,8 @@ import {
     MdSidenavModule,
     MdButtonModule,
     MdButtonToggleModule,
-    MdDialogModule
+    MdDialogModule,
+    MdChipsModule
   ],
   exports: [
     BrowserAnimationsModule,
@@ -32,7 +34,8 @@ import {
     MdSidenavModule,
     MdButtonModule,
     MdButtonToggleModule,
-    MdDialogModule
+    MdDialogModule,
+    MdChipsModule
   ]
 })
 export class MaterialImportsModule {}

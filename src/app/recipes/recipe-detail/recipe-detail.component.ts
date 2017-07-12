@@ -15,6 +15,14 @@ import { RecipeService }                    from "../recipe.service";
 export class RecipeDetailComponent {
   recipe: Recipe;
 
+  get tagsAlias(): string {
+    return this.recipe.tags ? this.recipe.tags.join(", ") : "";
+  }
+
+  set tagsAlias(tags: string) {
+    this.recipe.tags = tags.split(/,\s+/);
+  }
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -31,17 +39,27 @@ export class RecipeDetailComponent {
     this.service.deleteIngredientFrom(this.recipe, ingredient);
   }
 
+  // Add a tag
+  addTag(tag: string): void {
+    this.service.addTagTo(this.recipe, tag);
+  }
+
+  // Delete a tag
+  deleteTag(tag: string): void {
+    this.service.deleteTagFrom(this.recipe, tag);
+  }
+
   // Save the recipe
   save(): void {
     this.service.saveRecipe(this.recipe);
   }
 
   ngOnInit(): void {
-      this.route.paramMap
-        .switchMap((params: ParamMap) =>
-          this.service.getRecipe(params.get("id")))
-        .subscribe(recipe => {
-          this.recipe = recipe;
-        });
+    this.route.paramMap
+      .switchMap((params: ParamMap) =>
+        this.service.getRecipe(params.get("id")))
+      .subscribe(recipe => {
+        this.recipe = recipe;
+      });
   }
 }

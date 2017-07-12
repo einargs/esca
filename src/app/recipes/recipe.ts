@@ -1,11 +1,9 @@
-export class Recipe {
+export interface Recipe {
   $key: string;
-
-  constructor(
-    public owner_id: string,
-    public name = "",
-    public time = 0,
-    public ingredients: string[] = [],
-    public instructions = ""
-  ) {}
+  owner_id: string;
+  name: string;
+  tags: string[];
+  time: string;
+  ingredients: string[];
+  instructions: string;
 }
