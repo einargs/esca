@@ -113,7 +113,7 @@ export class RecipeService {
 
   // Add a tag to a recipe
   addTagTo(recipe: Recipe, tag: string): void {
-    if (recipe &&& tag)
+    if (recipe && tag)
       if (recipe.tags)
         recipe.tags.push(tag);
       else
