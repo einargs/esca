@@ -99,7 +99,26 @@ export class RecipeService {
         // If the ingredient exists (i.e., the index isn't -1)
         if (i !== -1)
           // Delete the ingredient
-          recipe.ingredients.splice(i - 1, 1);
+          recipe.ingredients.splice(i, 1);
       }
+  }
+
+
+  // Add a tag to a recipe
+  addTagTo(recipe: Recipe, tag: string): void {
+    if (recipe &&& tag)
+      if (recipe.tags)
+        recipe.tags.push(tag);
+      else
+        recipe.tags = [tag];
+  }
+
+  // Remove a tag from a recipe
+  deleteTagFrom(recipe: Recipe, tag: string): void {
+    if (recipe && tag && recipe.tags) {
+      let i = recipe.tags.indexOf(tag);
+
+      if (i !== -1) recipe.tags.splice(i, 1);
+    }
   }
 }
