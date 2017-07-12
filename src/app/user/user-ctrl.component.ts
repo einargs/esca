@@ -4,8 +4,10 @@ import { Component }          from "@angular/core";
 import { AngularFireAuth }    from 'angularfire2/auth';
 import * as firebase          from 'firebase/app';
 
+import { UserService }        from "./user.service";
+
 @Component({
-  selector: "app-user-ctrl",
+  selector: "user-ctrl",
   template:`
     <button md-raised-button
       *ngIf="user | async"
@@ -15,10 +17,11 @@ import * as firebase          from 'firebase/app';
       (click)="signIn()">Sign In</button>
     `
 })
-export class AppUserCtrlComponent {
+export class UserCtrlComponent {
   user: Observable<firebase.User>;
 
   constructor(
+    private service: UserService,
     public afAuth: AngularFireAuth
   ) {
     this.user = afAuth.authState;
@@ -26,11 +29,11 @@ export class AppUserCtrlComponent {
 
   //
   signIn(): void {
-    this.afAuth.auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
+    this.service.signInPopup();
   }
 
   //
   signOut(): void {
-    this.afAuth.auth.signOut();
+    this.service.signOut();
   }
 }
