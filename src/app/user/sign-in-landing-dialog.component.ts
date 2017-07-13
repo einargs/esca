@@ -4,17 +4,14 @@ import { MdDialogRef } from "@angular/material";
 @Component({
   selector: "sign-in-landing-dialog",
   template: `
-    <h2 md-dialog-title class="mat-h2">Select Sign In Method</h2>
+    <h2 md-dialog-title class="mat-h2">Sign In</h2>
     <md-dialog-content class="method-container">
-      <p class="mat-body-1">
-        How do you want to sign in?
-      </p>
       <button md-button
         [md-dialog-close]="'google'"
-        class="method">Sign In With Google</button>
+        class="method">With Google</button>
       <button md-button
-        [md-dialog-close]="'local'"
-        class="method">Sign In</button>
+        [md-dialog-close]="'email'"
+        class="method">With Email</button>
       <button md-button
         [md-dialog-close]="'sign-up'"
         class="method">Sign Up</button>

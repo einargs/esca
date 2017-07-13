@@ -49,7 +49,7 @@ export class UserService {
           case "sign-up":
             this.signUpWithEmailAndPasswordPopup();
             break;
-          case "local":
+          case "email":
             this.signInWithEmailAndPasswordPopup();
             break;
           case "google":
