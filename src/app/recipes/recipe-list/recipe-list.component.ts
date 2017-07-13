@@ -37,17 +37,17 @@ export class RecipeListComponent {
 
   // Open the delete recipe dialog and retrieve the response
   //TODO:Clean up the promise bit. There must be a better way...
-  private openDeleteRecipeDialog(): Promise<boolean> {
-    return this.dialog.open(DeleteRecipeDialogComponent)
-      .afterClosed()
-      .toPromise();
+  private openDeleteRecipeDialog(recipeName: string): Promise<boolean> {
+    return this.dialog.open(DeleteRecipeDialogComponent, {
+      data: recipeName
+    }).afterClosed().toPromise();
   }
 
   // Delete a recipe
-  async deleteRecipe(id: string): Promise<void> {
-    let confirmation = await this.openDeleteRecipeDialog();
+  async deleteRecipe(recipe: Recipe): Promise<void> {
+    let confirmation = await this.openDeleteRecipeDialog(recipe.name);
 
     if (confirmation)
-      await this.service.deleteRecipe(id);
+      await this.service.deleteRecipe(recipe.$key);
   }
 }

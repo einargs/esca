@@ -5,7 +5,7 @@
     <a md-line
       [routerLink]="['/recipe', recipe.$key]">{{recipe.name}}</a>
     <button md-icon-button
-      (click)="deleteRecipe(recipe.$key)"
+      (click)="deleteRecipe(recipe)"
       type="button"
       class="delete-recipe">
       <md-icon class="delete-recipe-icon">delete</md-icon>
