@@ -22,18 +22,17 @@ import { MdDialogRef }  from "@angular/material";
           name="passwordConfirm" />
       </md-input-container>
     </md-dialog-content>
-    <md-dialog-actions>
-      <button md-button
-        [md-dialog-close]="false">Cancel</button>
+    <md-dialog-actions class="actions">
       <button md-button
         [disabled]="password.value !== passwordConfirm.value"
         [md-dialog-close]="{email:email.value, password:password.value}">Sign Up</button>
+      <button md-button
+        [md-dialog-close]="false">Cancel</button>
     </md-dialog-actions>
     `,
   styles: [`
     .field { display: block }
-    .button-container { display: flex }
-    .expand { flex: 1 auto }
+    .actions { flex-direction: row-reverse }
     `]
 })
 export class LocalSignUpDialogComponent {

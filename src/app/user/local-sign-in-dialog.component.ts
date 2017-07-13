@@ -17,15 +17,16 @@ import { MdDialogRef }  from "@angular/material";
           name="password" />
       </md-input-container>
     </md-dialog-content>
-    <md-dialog-actions class="button-container">
-      <button md-button
-        [md-dialog-close]="false">Cancel</button>
+    <md-dialog-actions class="actions">
       <button md-button
         [md-dialog-close]="{email:email.value, password:password.value}">Sign In</button>
+      <button md-button
+        [md-dialog-close]="false">Cancel</button>
     </md-dialog-actions>
     `,
   styles: [`
     .field { display: block }
+    .actions { flex-direction: row-reverse }
     `]
 })
 export class LocalSignInDialogComponent {
