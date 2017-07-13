@@ -9,10 +9,10 @@ import { UserService }        from "./user.service";
 @Component({
   selector: "user-ctrl",
   template:`
-    <button md-raised-button
+    <button md-raised-button color="accent"
       *ngIf="user | async"
       (click)="signOut()">Sign Out</button>
-    <button md-raised-button
+    <button md-raised-button color="accent"
       *ngIf="!(user | async)"
       (click)="signIn()">Sign In</button>
     `

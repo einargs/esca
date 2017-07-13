@@ -1,6 +1,8 @@
 <md-toolbar class="toolbar mat-elevation-z6" color="primary">
-  <md-button-toggle (change)="emitMenuToggle()">
-    <md-icon>menu</md-icon>
+  <md-button-toggle
+    (change)="emitMenuToggle()"
+    class="menu-toggle">
+    <md-icon class="menu-icon">menu</md-icon>
   </md-button-toggle>
   <span class="fill-space"></span>
   <a routerLink="/" class="item">{{title}}</a>
