@@ -1,14 +1,15 @@
-import {Observable }            from "rxjs/Observable";
+import {Observable }                    from "rxjs/Observable";
 import 'rxjs/add/operator/switchMap';
 
-import { Injectable }           from "@angular/core";
-import { AngularFireDatabase }  from "angularfire2/database";
-import { AngularFireAuth }      from 'angularfire2/auth';
-import * as firebase            from 'firebase/app';
+import { Injectable }                   from "@angular/core";
+import { AngularFireDatabase }          from "angularfire2/database";
+import { AngularFireAuth }              from 'angularfire2/auth';
+import * as firebase                    from 'firebase/app';
 
-import { UserService }          from "../user/user.service";
-import { Recipe }               from "./recipe";
-import { RecipeGist }           from "./recipe-gist";
+import { UserService }                  from "../user/user.service";
+import { Recipe }                       from "./recipe";
+import { RecipeGist }                   from "./recipe-gist";
+import { RecipeFilter, applyFilter }    from "./recipe-filter";
 
 @Injectable()
 export class RecipeService {
@@ -24,6 +25,20 @@ export class RecipeService {
   getCurrentUserRecipeGists(): Observable<RecipeGist[]> {
     return this.userService.userIdSubject
       .switchMap(id => id ? this.getUserRecipeGists(id) : []);
+  }
+
+  // Filter the recipe array of a passed observable
+  filter(
+    filter: RecipeFilter, recipeGists: Observable<RecipeGist[]>
+  ): Observable<RecipeGist[]> {
+    return recipeGists.map(gists => applyFilter(filter, gists));
+  }
+
+  // Filter the recipe array of a passed observable by tags
+  filterByTags(
+    tags: string[], gists: Observable<RecipeGist[]>
+  ): Observable<RecipeGist[]> {
+    return this.filter({ hasTags: tags }, gists);
   }
 
   getRecipe(id: string): Observable<Recipe> {

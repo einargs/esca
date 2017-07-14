@@ -1,5 +1,6 @@
 import { Observable }                       from "rxjs/Observable";
 import 'rxjs/add/operator/toPromise';
+import 'rxjs/add/operator/filter';
 
 import { Component }                        from '@angular/core';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
@@ -17,7 +18,8 @@ import { UserService }                      from "../../user/user.service";
   styleUrls: [ "./recipe-list.component.sass" ]
 })
 export class RecipeListComponent {
-  recipes = this.service.getCurrentUserRecipeGists();
+  raw: Observable<RecipeGist[]> = this.service.getCurrentUserRecipeGists();
+  recipes: Observable<RecipeGist[]> = this.raw;
 
   constructor(
     private route:    ActivatedRoute,
@@ -47,5 +49,16 @@ export class RecipeListComponent {
     let confirmation = await this.openDeleteRecipeDialog(recipe.name);
 
     if (confirmation) await this.service.deleteRecipe(recipe);
+  }
+
+  // Filter the shown recipes by tags
+  filterByTags(tags: string[]): void {
+    console.log(tags);
+    this.recipes = this.service.filterByTags(tags, this.raw);
+  }
+
+  // Filter by a comma deliminated string of tags
+  filterByTagString(tags: string): void {
+    this.filterByTags(tags.split(/,\s+/).filter(tag => tag!==""));
   }
 }
