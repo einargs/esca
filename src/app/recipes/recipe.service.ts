@@ -1,12 +1,13 @@
-import {Observable }            from "rxjs/Observable";
+import {Observable }                    from "rxjs/Observable";
 
-import { Injectable }           from "@angular/core";
-import { AngularFireDatabase }  from "angularfire2/database";
-import { AngularFireAuth }      from 'angularfire2/auth';
-import * as firebase            from 'firebase/app';
+import { Injectable }                   from "@angular/core";
+import { AngularFireDatabase }          from "angularfire2/database";
+import { AngularFireAuth }              from 'angularfire2/auth';
+import * as firebase                    from 'firebase/app';
 
-import { UserService }          from "../user/user.service";
-import { Recipe }               from "./recipe";
+import { UserService }                  from "../user/user.service";
+import { Recipe }                       from "./recipe";
+import { RecipeFilter, filterRecipes }  from "./recipe-filter";
 
 @Injectable()
 export class RecipeService {
@@ -37,31 +38,18 @@ export class RecipeService {
     });
   }
 
-  // Filter a passed stream of recipes on what tags they have
-  filterForTags(
-    recipes: Observable<Recipe[]>, tags: string[]
+  // Filter the recipe array of a passed observable
+  filter(
+    filter: RecipeFilter, recipes: Observable<Recipe[]>
   ): Observable<Recipe[]> {
-    return recipes.map(
-      recipes => recipes.filter(
-        recipe => recipe.tags && tags.every(
-          tag => recipe.tags.includes(tag)
-        )
-      )
-    );
+    return recipes.map(recipes => filterRecipes(filter, recipes));
   }
 
-  // Get
-  getUserRecipesTagged(
-    userId: string, tags: string[]
+  // FFilter the recipe array of a passed observable by tags
+  filterByTags(
+    tags: string[], recipes: Observable<Recipe[]>
   ): Observable<Recipe[]> {
-    return this.filterForTags(this.getUserRecipes(userId), tags);
-  }
-
-  // Get
-  getCurrentUserRecipesTagged(
-    tags: string[]
-  ): Observable<Recipe[]> {
-    return this.filterForTags(this.getCurrentUserRecipes(), tags);
+    return this.filter({ hasTags: tags }, recipes);
   }
 
   getRecipe(id: string): Observable<Recipe> {

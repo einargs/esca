@@ -56,7 +56,7 @@ export class RecipeListComponent {
   // Filter the shown recipes by tags
   filterByTags(tags: string[]): void {
     console.log(tags);
-    this.recipes = this.service.filterForTags(this.raw, tags);
+    this.recipes = this.service.filterByTags(tags, this.raw);
   }
 
   // Filter by a comma deliminated string of tags

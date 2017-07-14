@@ -3,7 +3,7 @@ export interface Recipe {
   owner_id: string;
   name: string;
   tags: string[];
-  time: string;
+  time: number;
   ingredients: string[];
   instructions: string;
 }
