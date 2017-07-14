@@ -1,5 +1,4 @@
 import { Observable }                       from "rxjs/Observable";
-import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/toPromise';
 
 import { Component }                        from '@angular/core';
@@ -7,6 +6,7 @@ import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { MdDialog }                         from "@angular/material";
 
 import { Recipe }                           from "../recipe";
+import { RecipeGist }                       from "../recipe-gist";
 import { DeleteRecipeDialogComponent }      from "./delete-recipe-dialog.component";
 import { RecipeService }                    from "../recipe.service";
 import { UserService }                      from "../../user/user.service";
@@ -17,8 +17,7 @@ import { UserService }                      from "../../user/user.service";
   styleUrls: [ "./recipe-list.component.sass" ]
 })
 export class RecipeListComponent {
-  //TODO:Flatten this to use a gist of a user's recipes stored seperately
-  recipes = this.service.getCurrentUserRecipes();
+  recipes = this.service.getCurrentUserRecipeGists();
 
   constructor(
     private route:    ActivatedRoute,
@@ -47,7 +46,6 @@ export class RecipeListComponent {
   async deleteRecipe(recipe: Recipe): Promise<void> {
     let confirmation = await this.openDeleteRecipeDialog(recipe.name);
 
-    if (confirmation)
-      await this.service.deleteRecipe(recipe.$key);
+    if (confirmation) await this.service.deleteRecipe(recipe);
   }
 }

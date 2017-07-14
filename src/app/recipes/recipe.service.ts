@@ -1,4 +1,5 @@
 import {Observable }            from "rxjs/Observable";
+import 'rxjs/add/operator/switchMap';
 
 import { Injectable }           from "@angular/core";
 import { AngularFireDatabase }  from "angularfire2/database";
@@ -7,6 +8,7 @@ import * as firebase            from 'firebase/app';
 
 import { UserService }          from "../user/user.service";
 import { Recipe }               from "./recipe";
+import { RecipeGist }           from "./recipe-gist";
 
 @Injectable()
 export class RecipeService {
@@ -15,26 +17,13 @@ export class RecipeService {
     private userService: UserService
   ) {}
 
-  getRecipes(): Observable<Recipe[]> {
-    return this.db.list("/recipe");
+  getUserRecipeGists(userId: string): Observable<RecipeGist[]> {
+    return this.db.list(`/user/${userId}/recipe`);
   }
 
-  getUserRecipes(userId: string): Observable<Recipe[]> {
-    return this.db.list("/recipe", {
-      query: {
-        orderByChild: "owner_id",
-        equalTo: userId
-      }
-    });
-  }
-
-  getCurrentUserRecipes(): Observable<Recipe[]> {
-    return this.db.list("/recipe", {
-      query: {
-        orderByChild: "owner_id",
-        equalTo: this.userService.userIdSubject
-      }
-    });
+  getCurrentUserRecipeGists(): Observable<RecipeGist[]> {
+    return this.userService.userIdSubject
+      .switchMap(id => id ? this.getUserRecipeGists(id) : []);
   }
 
   getRecipe(id: string): Observable<Recipe> {
@@ -47,21 +36,36 @@ export class RecipeService {
 
     if (!uid) throw Error("User not logged in");
 
-    return this.db.list("/recipe").push({
+    let key = this.db.list("/recipe").push({
       owner_id: uid,
-      name: "",
+      name: "New Recipe",
       tags: [],
       time: 0,
       ingredients: [],
       instructions: []
     }).key;
+
+    this.db.object(`/user/${uid}/recipe/${key}`).set({
+      owner_id: uid,
+      name: "New Recipe",
+      time: 0
+    });
+
+    return key;
   }
 
   // Delete a recipe
-  async deleteRecipe(id: string): Promise<void> {
-    if (!id) throw Error("Must pass id for deletion");
+  async deleteRecipe(recipe: Recipe): Promise<void> {
+    if (!recipe) throw Error("Must pass id for deletion");
 
-    await this.db.list("/recipe").remove(id);
+    let id = recipe.$key;
+    let uid = recipe.owner_id;
+
+    let p1 = this.db.list("/recipe").remove(id);
+    let p2 = this.db.list(`/user/${uid}/recipe`).remove(id);
+
+    await p1;
+    await p2;
   }
 
   // Save a recipe
@@ -70,12 +74,18 @@ export class RecipeService {
 
     let {
       $key, owner_id="", name="", time=0,
-      ingredients=[], instructions=""
+      tags=[], ingredients=[], instructions=""
     } = recipe;
 
-    await this.db.object(`/recipe/${$key}`).update({
-      owner_id, name, time, ingredients, instructions
+    let recUpdate = this.db.object(`/recipe/${$key}`).update({
+      owner_id, name, time, tags, ingredients, instructions
     });
+    let gistUpdate = this.db.object(`/user/${owner_id}/recipe/${$key}`).update({
+      owner_id, name, time, tags, ingredients
+    });
+
+    await recUpdate;
+    await gistUpdate;
   }
 
 
