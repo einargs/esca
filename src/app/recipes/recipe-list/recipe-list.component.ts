@@ -1,8 +1,7 @@
 import { Observable }                       from "rxjs/Observable";
-import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/toPromise';
 
-import { Component, OnInit }                from '@angular/core';
+import { Component }                        from '@angular/core';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { MdDialog }                         from "@angular/material";
 
@@ -17,22 +16,15 @@ import { UserService }                      from "../../user/user.service";
   templateUrl: "./recipe-list.component.html",
   styleUrls: [ "./recipe-list.component.sass" ]
 })
-export class RecipeListComponent implements OnInit {
-  recipes: Observable<RecipeGist[]>;
+export class RecipeListComponent {
+  recipes = this.service.getCurrentUserRecipeGists();
 
   constructor(
     private route:    ActivatedRoute,
     private router:   Router,
     private service:  RecipeService,
-    private userService: UserService,
     public dialog:    MdDialog
   ) {}
-
-  ngOnInit(): void {
-    this.userService.userIdSubject.subscribe(id => {
-      if (id) this.recipes = this.service.getUserRecipeGists(id);
-    });
-  }
 
   // Create a new recipe and navigate to it
   newRecipe(): Promise<void> {

@@ -1,4 +1,5 @@
 import {Observable }            from "rxjs/Observable";
+import 'rxjs/add/operator/switchMap';
 
 import { Injectable }           from "@angular/core";
 import { AngularFireDatabase }  from "angularfire2/database";
@@ -18,6 +19,11 @@ export class RecipeService {
 
   getUserRecipeGists(userId: string): Observable<RecipeGist[]> {
     return this.db.list(`/user/${userId}/recipe`);
+  }
+
+  getCurrentUserRecipeGists(): Observable<RecipeGist[]> {
+    return this.userService.userIdSubject
+      .switchMap(id => id ? this.getUserRecipeGists(id) : []);
   }
 
   getRecipe(id: string): Observable<Recipe> {
