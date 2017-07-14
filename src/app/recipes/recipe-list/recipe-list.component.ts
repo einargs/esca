@@ -1,6 +1,7 @@
 import { Observable }                       from "rxjs/Observable";
 import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/toPromise';
+import 'rxjs/add/operator/filter';
 
 import { Component }                        from '@angular/core';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
@@ -18,7 +19,8 @@ import { UserService }                      from "../../user/user.service";
 })
 export class RecipeListComponent {
   //TODO:Flatten this to use a gist of a user's recipes stored seperately
-  recipes = this.service.getCurrentUserRecipes();
+  raw = this.service.getCurrentUserRecipes();
+  recipes = this.raw;
 
   constructor(
     private route:    ActivatedRoute,
@@ -49,5 +51,16 @@ export class RecipeListComponent {
 
     if (confirmation)
       await this.service.deleteRecipe(recipe.$key);
+  }
+
+  // Filter the shown recipes by tags
+  filterByTags(tags: string[]): void {
+    console.log(tags);
+    this.recipes = this.service.filterForTags(this.raw, tags);
+  }
+
+  // Filter by a comma deliminated string of tags
+  filterByTagString(tags: string): void {
+    this.filterByTags(tags.split(/,\s+/).filter(tag => tag!==""));
   }
 }

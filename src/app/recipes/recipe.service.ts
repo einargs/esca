@@ -37,6 +37,33 @@ export class RecipeService {
     });
   }
 
+  // Filter a passed stream of recipes on what tags they have
+  filterForTags(
+    recipes: Observable<Recipe[]>, tags: string[]
+  ): Observable<Recipe[]> {
+    return recipes.map(
+      recipes => recipes.filter(
+        recipe => recipe.tags && tags.every(
+          tag => recipe.tags.includes(tag)
+        )
+      )
+    );
+  }
+
+  // Get
+  getUserRecipesTagged(
+    userId: string, tags: string[]
+  ): Observable<Recipe[]> {
+    return this.filterForTags(this.getUserRecipes(userId), tags);
+  }
+
+  // Get
+  getCurrentUserRecipesTagged(
+    tags: string[]
+  ): Observable<Recipe[]> {
+    return this.filterForTags(this.getCurrentUserRecipes(), tags);
+  }
+
   getRecipe(id: string): Observable<Recipe> {
     return this.db.object(`/recipe/${id}`);
   }
