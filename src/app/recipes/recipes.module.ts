@@ -8,6 +8,7 @@ import { RecipeListComponent }          from "./recipe-list/recipe-list.componen
 import { DeleteRecipeDialogComponent }  from "./recipe-list/delete-recipe-dialog.component";
 
 import { RecipeService }                from "./recipe.service";
+import { UserService }                  from "../user/user.service";
 
 import { MaterialImportsModule }        from "../imports/material-imports.module";
 import { RecipesRoutingModule }         from "./recipes-routing.module";
@@ -27,6 +28,9 @@ import { RecipesRoutingModule }         from "./recipes-routing.module";
   entryComponents: [
     DeleteRecipeDialogComponent
   ],
-  providers: [ RecipeService ]
+  providers: [
+    RecipeService,
+    UserService
+  ]
 })
 export class RecipesModule {}
