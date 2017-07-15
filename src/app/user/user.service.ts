@@ -1,7 +1,10 @@
 import { Observable }       from "rxjs/Observable";
 import { BehaviorSubject }  from "rxjs/BehaviorSubject";
 import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/mapTo';
 import 'rxjs/add/operator/multicast';
+import 'rxjs/add/operator/do';
+import 'rxjs/add/operator/first';
 
 import { Injectable }                   from '@angular/core';
 import { MdDialog }                     from "@angular/material";
@@ -22,10 +25,20 @@ export class UserService {
   userId: string;
   signedIn: boolean;
 
+  //NOTE:A hack to tell if auth state has been loaded
+  // Deals with the problem of the subjects being initialized as null
+  isAuthLoaded = false;
+
   constructor(
     private dialog: MdDialog,
     private afAuth: AngularFireAuth
   ) {
+    // Get a promise for authentication being loaded
+    // When it resolves, set the boolean to true
+    this.authLoaded().then(() => {
+      this.isAuthLoaded = true;
+    });
+
     afAuth.authState
       .map(user => user ? new User(user.uid) : null)
       .multicast(this.userSubject).connect();
@@ -42,31 +55,53 @@ export class UserService {
     });
   }
 
-  signInPopup(): void {
-    this.selectSignInMethodPopup()
-      .subscribe(result => {
-        switch (result) {
-          case "sign-up":
-            this.signUpWithEmailAndPasswordPopup();
-            break;
-          case "email":
-            this.signInWithEmailAndPasswordPopup();
-            break;
-          case "google":
-            this.signInWithGooglePopup();
-            break;
-        }
-      });
+  // Get a promise that resolves when auth is loaded
+  async authLoaded(): Promise<void> {
+    if (this.isAuthLoaded) return;
+    else await this.afAuth.authState
+      .first().toPromise();
   }
 
-  selectSignInMethodPopup(): Observable<any> {
-    return this.dialog.open(SignInLandingDialogComponent)
-      .afterClosed();
+  // A utility function for setting up the sign in dialogs
+  private setupAuthDialog(component: any): Promise<any> {
+    let dialog = this.dialog.open(component);
+
+    let sub = this.userSubject.subscribe(user => {
+      if (user) {
+        dialog.close();
+      }
+    });
+
+    return dialog.afterClosed().do(() => {
+      sub.unsubscribe();
+    }).toPromise();
   }
 
-  signUpWithEmailAndPasswordPopup(): void {
-    this.dialog.open(LocalSignUpDialogComponent)
-      .afterClosed().subscribe(result => {
+  async signInPopup(): Promise<void> {
+    await this.authLoaded();
+
+    if (this.signedIn) return;
+
+    switch (await this.selectSignInMethodPopup()) {
+      case "sign-up":
+        await this.signUpWithEmailAndPasswordPopup();
+        break;
+      case "email":
+        await this.signInWithEmailAndPasswordPopup();
+        break;
+      case "google":
+        await this.signInWithGooglePopup();
+        break;
+    }
+  }
+
+  selectSignInMethodPopup(): Promise<any> {
+    return this.setupAuthDialog(SignInLandingDialogComponent);
+  }
+
+  signUpWithEmailAndPasswordPopup(): Promise<void> {
+    return this.setupAuthDialog(LocalSignUpDialogComponent)
+      .then(result => {
         if (result)
           this.afAuth.auth.createUserWithEmailAndPassword(
             result.email, result.password
@@ -74,9 +109,9 @@ export class UserService {
       });
   }
 
-  signInWithEmailAndPasswordPopup(): void {
-    this.dialog.open(LocalSignInDialogComponent)
-      .afterClosed().subscribe(result => {
+  signInWithEmailAndPasswordPopup(): Promise<void> {
+    return this.setupAuthDialog(LocalSignInDialogComponent)
+      .then(result => {
         if (result)
           this.afAuth.auth.signInWithEmailAndPassword(
             result.email, result.password
@@ -84,11 +119,11 @@ export class UserService {
       });
   }
 
-  signInWithGooglePopup(): void {
-    this.afAuth.auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
+  async signInWithGooglePopup(): Promise<void> {
+    await this.afAuth.auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
   }
 
-  signOut(): void {
-    this.afAuth.auth.signOut();
+  async signOut(): Promise<void> {
+    await this.afAuth.auth.signOut();
   }
 }
