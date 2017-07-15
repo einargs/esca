@@ -2,6 +2,7 @@ import { Observable }       from "rxjs/Observable";
 import { BehaviorSubject }  from "rxjs/BehaviorSubject";
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/multicast';
+import 'rxjs/add/operator/do';
 
 import { Injectable }                   from '@angular/core';
 import { MdDialog }                     from "@angular/material";
@@ -42,6 +43,21 @@ export class UserService {
     });
   }
 
+  private setupAuthDialog(component: any): Promise<any> {
+    let dialog = this.dialog.open(component);
+
+    let sub = this.userSubject.subscribe(user => {
+      if (user) {
+        dialog.close();
+        sub.unsubscribe();
+      }
+    });
+
+    return dialog.afterClosed().do(() => {
+      sub.unsubscribe();
+    }).toPromise();
+  }
+
   async signInPopup(): Promise<void> {
     switch (await this.selectSignInMethodPopup()) {
       case "sign-up":
@@ -57,15 +73,11 @@ export class UserService {
   }
 
   selectSignInMethodPopup(): Promise<any> {
-    return this.dialog.open(SignInLandingDialogComponent)
-      .afterClosed()
-      .toPromise();
+    return this.setupAuthDialog(SignInLandingDialogComponent);
   }
 
   signUpWithEmailAndPasswordPopup(): Promise<void> {
-    return this.dialog.open(LocalSignUpDialogComponent)
-      .afterClosed()
-      .toPromise()
+    return this.setupAuthDialog(LocalSignUpDialogComponent)
       .then(result => {
         if (result)
           this.afAuth.auth.createUserWithEmailAndPassword(
@@ -75,9 +87,7 @@ export class UserService {
   }
 
   signInWithEmailAndPasswordPopup(): Promise<void> {
-    return this.dialog.open(LocalSignInDialogComponent)
-      .afterClosed()
-      .toPromise()
+    return this.setupAuthDialog(LocalSignInDialogComponent)
       .then(result => {
         if (result)
           this.afAuth.auth.signInWithEmailAndPassword(
