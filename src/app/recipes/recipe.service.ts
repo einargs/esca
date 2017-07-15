@@ -19,7 +19,7 @@ export class RecipeService {
   ) {}
 
   getUserRecipeGists(userId: string): Observable<RecipeGist[]> {
-    return this.db.list(`/user/${userId}/recipe`);
+    return this.db.list(`/recipe-gists-by-user/${userId}`);
   }
 
   getCurrentUserRecipeGists(): Observable<RecipeGist[]> {
@@ -60,7 +60,7 @@ export class RecipeService {
       instructions: []
     }).key;
 
-    this.db.object(`/user/${uid}/recipe/${key}`).set({
+    this.db.object(`/recipe-gists-by-user/${uid}/${key}`).set({
       owner_id: uid,
       name: "New Recipe",
       time: 0
@@ -77,7 +77,7 @@ export class RecipeService {
     let uid = recipe.owner_id;
 
     let p1 = this.db.list("/recipe").remove(id);
-    let p2 = this.db.list(`/user/${uid}/recipe`).remove(id);
+    let p2 = this.db.list(`/recipe-gists-by-user/${uid}`).remove(id);
 
     await p1;
     await p2;
@@ -95,7 +95,7 @@ export class RecipeService {
     let recUpdate = this.db.object(`/recipe/${$key}`).update({
       owner_id, name, time, tags, ingredients, instructions
     });
-    let gistUpdate = this.db.object(`/user/${owner_id}/recipe/${$key}`).update({
+    let gistUpdate = this.db.object(`/recipe-gists-by-user/${owner_id}/${$key}`).update({
       owner_id, name, time, tags, ingredients
     });
 
