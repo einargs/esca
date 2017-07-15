@@ -42,31 +42,31 @@ export class UserService {
     });
   }
 
-  signInPopup(): void {
-    this.selectSignInMethodPopup()
-      .subscribe(result => {
-        switch (result) {
-          case "sign-up":
-            this.signUpWithEmailAndPasswordPopup();
-            break;
-          case "email":
-            this.signInWithEmailAndPasswordPopup();
-            break;
-          case "google":
-            this.signInWithGooglePopup();
-            break;
-        }
-      });
+  async signInPopup(): Promise<void> {
+    switch (await this.selectSignInMethodPopup()) {
+      case "sign-up":
+        await this.signUpWithEmailAndPasswordPopup();
+        break;
+      case "email":
+        await this.signInWithEmailAndPasswordPopup();
+        break;
+      case "google":
+        await this.signInWithGooglePopup();
+        break;
+    }
   }
 
-  selectSignInMethodPopup(): Observable<any> {
+  selectSignInMethodPopup(): Promise<any> {
     return this.dialog.open(SignInLandingDialogComponent)
-      .afterClosed();
+      .afterClosed()
+      .toPromise();
   }
 
-  signUpWithEmailAndPasswordPopup(): void {
-    this.dialog.open(LocalSignUpDialogComponent)
-      .afterClosed().subscribe(result => {
+  signUpWithEmailAndPasswordPopup(): Promise<void> {
+    return this.dialog.open(LocalSignUpDialogComponent)
+      .afterClosed()
+      .toPromise()
+      .then(result => {
         if (result)
           this.afAuth.auth.createUserWithEmailAndPassword(
             result.email, result.password
@@ -74,9 +74,11 @@ export class UserService {
       });
   }
 
-  signInWithEmailAndPasswordPopup(): void {
-    this.dialog.open(LocalSignInDialogComponent)
-      .afterClosed().subscribe(result => {
+  signInWithEmailAndPasswordPopup(): Promise<void> {
+    return this.dialog.open(LocalSignInDialogComponent)
+      .afterClosed()
+      .toPromise()
+      .then(result => {
         if (result)
           this.afAuth.auth.signInWithEmailAndPassword(
             result.email, result.password
@@ -84,11 +86,11 @@ export class UserService {
       });
   }
 
-  signInWithGooglePopup(): void {
-    this.afAuth.auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
+  async signInWithGooglePopup(): Promise<void> {
+    await this.afAuth.auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
   }
 
-  signOut(): void {
-    this.afAuth.auth.signOut();
+  async signOut(): Promise<void> {
+    await this.afAuth.auth.signOut();
   }
 }
