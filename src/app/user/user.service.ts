@@ -1,8 +1,10 @@
 import { Observable }       from "rxjs/Observable";
 import { BehaviorSubject }  from "rxjs/BehaviorSubject";
 import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/mapTo';
 import 'rxjs/add/operator/multicast';
 import 'rxjs/add/operator/do';
+import 'rxjs/add/operator/first';
 
 import { Injectable }                   from '@angular/core';
 import { MdDialog }                     from "@angular/material";
@@ -23,10 +25,20 @@ export class UserService {
   userId: string;
   signedIn: boolean;
 
+  //NOTE:A hack to tell if auth state has been loaded
+  // Deals with the problem of the subjects being initialized as null
+  isAuthLoaded = false;
+
   constructor(
     private dialog: MdDialog,
     private afAuth: AngularFireAuth
   ) {
+    // Get a promise for authentication being loaded
+    // When it resolves, set the boolean to true
+    this.authLoaded().then(() => {
+      this.isAuthLoaded = true;
+    });
+
     afAuth.authState
       .map(user => user ? new User(user.uid) : null)
       .multicast(this.userSubject).connect();
@@ -43,13 +55,20 @@ export class UserService {
     });
   }
 
+  // Get a promise that resolves when auth is loaded
+  async authLoaded(): Promise<void> {
+    if (this.isAuthLoaded) return;
+    else await this.afAuth.authState
+      .first().toPromise();
+  }
+
+  // A utility function for setting up the sign in dialogs
   private setupAuthDialog(component: any): Promise<any> {
     let dialog = this.dialog.open(component);
 
     let sub = this.userSubject.subscribe(user => {
       if (user) {
         dialog.close();
-        sub.unsubscribe();
       }
     });
 
@@ -59,6 +78,10 @@ export class UserService {
   }
 
   async signInPopup(): Promise<void> {
+    await this.authLoaded();
+
+    if (this.signedIn) return;
+
     switch (await this.selectSignInMethodPopup()) {
       case "sign-up":
         await this.signUpWithEmailAndPasswordPopup();

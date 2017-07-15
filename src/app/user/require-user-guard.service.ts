@@ -16,7 +16,10 @@ export class RequireUserGuard implements CanActivate {
 
   // Prompt the user to sign in; on success redirect them to the requested page
   private async promptSignInAndRedirect(redirectUrl: string) {
-    await this.userService.signInPopup();
+    await this.userService.authLoaded();
+
+    if (!this.userService.signedIn) await this.userService.signInPopup();
+
     await this.router.navigateByUrl(redirectUrl);
   }
 
