@@ -1,5 +1,8 @@
 <md-nav-list>
   <a md-list-item
+    routerLink="/"
+    routerLinkActive="active">Home</a>
+  <a md-list-item
     *ngIf="userService.signedIn"
     routerLink="/recipe"
     routerLinkActive="active">My Recipes</a>
