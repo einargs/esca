@@ -3,7 +3,7 @@ import 'rxjs/add/operator/toPromise';
 import 'rxjs/add/operator/filter';
 
 import { Component }                        from '@angular/core';
-import { Router, ActivatedRoute, ParamMap } from '@angular/router';
+import { Router }                           from '@angular/router';
 import { MdDialog }                         from "@angular/material";
 
 import { Recipe }                           from "../recipe";
@@ -22,7 +22,6 @@ export class RecipeListComponent {
   recipes: Observable<RecipeGist[]> = this.raw;
 
   constructor(
-    private route:    ActivatedRoute,
     private router:   Router,
     private service:  RecipeService,
     public dialog:    MdDialog
