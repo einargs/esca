@@ -37,7 +37,7 @@ export class RecipeListComponent {
 
   // Open the delete recipe dialog and retrieve the response
   //TODO:Clean up the promise bit. There must be a better way...
-  private openDeleteRecipeDialog(recipeName: string): Promise<boolean> {
+  openDeleteRecipeDialog(recipeName: string): Promise<boolean> {
     return this.dialog.open(DeleteRecipeDialogComponent, {
       data: recipeName
     }).afterClosed().toPromise();

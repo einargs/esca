@@ -16,6 +16,7 @@ import { RecipeListComponent }    from './recipe-list.component';
 import { RecipeService }          from "../recipe.service";
 import { RecipeGist }             from "../recipe-gist";
 
+import { MdDialog }               from "@angular/material";
 import { MaterialImportsModule }  from "../../imports/material-imports.module";
 
 import { BlankComponent }         from "../../../testing/blank-component";
@@ -25,6 +26,7 @@ let component:      RecipeListComponent;
 let fixture:        ComponentFixture<RecipeListComponent>;
 let recipeService:  RecipeService;
 let page:           Page;
+let dialog:         MdDialog;
 
 describe('RecipeListComponent', () => {
   beforeEach(async(() => {
@@ -54,8 +56,13 @@ describe('RecipeListComponent', () => {
     page      = new Page();
 
     recipeService = fixture.debugElement.injector.get(RecipeService);
+    dialog        = fixture.debugElement.injector.get(MdDialog);
 
-    fixture.detectChanges();
+    component.openDeleteRecipeDialog = jasmine
+      .createSpy("openDeleteRecipeDialog")
+      .and.callFake((name: string): Promise<boolean> => Promise.resolve(true));
+
+    page.update();
   });
 
   it('should be created', () => {
@@ -92,23 +99,60 @@ describe('RecipeListComponent', () => {
     expect(page.listItems.length).toBe(1);
     expect(page.listedRecipes).toContain("test");
   }));
+
+  it("should tell the service to delete recipes (fakeAsync)", fakeAsync(() => {
+    tick();
+    page.update();
+
+    page.deleteButtons[0].click();
+    tick();
+
+    expect(recipeService.deleteRecipe).toHaveBeenCalled();
+  }));
+
+  it("should tell the service to make new recipes (fakeAsync)", fakeAsync(() => {
+    tick();
+    page.update();
+
+    page.newButton.click();
+    tick();
+
+    expect(recipeService.newRecipe).toHaveBeenCalled();
+  }));
 });
 
 class Page {
-  list:         HTMLElement;
-  listItems:    HTMLElement[];
-  recipeLinks:  HTMLElement[];
+  deList:           DebugElement;
+  deNewButton:      DebugElement;
+  deListItems:      DebugElement[];
+  deRecipeLinks:    DebugElement[];
+  deDeleteButtons:  DebugElement[];
 
-  listedRecipes: string[];
+  list:             HTMLElement;
+  newButton:        HTMLElement;
+  listItems:        HTMLElement[];
+  recipeLinks:      HTMLElement[];
+  deleteButtons:    HTMLElement[];
+
+  listedRecipes:    string[];
 
   loadElements() {
-    let deList = fixture.debugElement.query(By.css(".list"));
-    this.list = deList.nativeElement;
+    let f = fixture.debugElement;
 
-    let deListItems = fixture.debugElement.queryAll(By.css(".recipe-item"));
-    this.listItems = deListItems.map(de => de.nativeElement);
+    this.deList = f.query(By.css(".list"));
+    this.list = this.deList.nativeElement;
 
-    this.recipeLinks = fixture.debugElement.queryAll(By.css(".recipe-item a")).map(de => de.nativeElement);
+    this.deNewButton = f.query(By.css(".new-recipe"));
+    this.newButton = this.deNewButton.nativeElement;
+
+    this.deListItems = f.queryAll(By.css(".recipe-item"));
+    this.listItems = this.deListItems.map(de => de.nativeElement);
+
+    this.deDeleteButtons = f.queryAll(By.css(".recipe-item button"));
+    this.deleteButtons = this.deDeleteButtons.map(de => de.nativeElement);
+
+    this.deRecipeLinks = f.queryAll(By.css(".recipe-item a"));
+    this.recipeLinks = this.deRecipeLinks.map(de => de.nativeElement);
 
     this.listedRecipes = this.recipeLinks.map(el => el.textContent);
   }

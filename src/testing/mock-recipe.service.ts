@@ -24,8 +24,10 @@ export class MockRecipeService {
   getCurrentUserRecipeGists = jasmine.createSpy("getCurrentUserRecipeGists")
     .and.callFake(() => Observable.of(this.genGists()));
 
-  newRecipe = jasmine.createSpy("newRecipe");
-  deleteRecipe = jasmine.createSpy("deleteRecipe");
+  newRecipe = jasmine.createSpy("newRecipe")
+    .and.callFake(()=>Promise.resolve("id")); // The id doesn't matter
+  deleteRecipe = jasmine.createSpy("deleteRecipe")
+    .and.callFake(()=>Promise.resolve());
 
   // Various utility methods on Recipe Service (that should be moved out of it)
   filter = RecipeService.prototype.filter;
