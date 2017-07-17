@@ -27,7 +27,8 @@ export class MockRecipeService {
   newRecipe = jasmine.createSpy("newRecipe");
   deleteRecipe = jasmine.createSpy("deleteRecipe");
 
-  // Various utility methods on Recipe Service that need to be moved out of it
+  // Various utility methods on Recipe Service (that should be moved out of it)
+  filter = RecipeService.prototype.filter;
   filterByTags = RecipeService.prototype.filterByTags;
   addIngredientTo = RecipeService.prototype.addIngredientTo;
   deleteIngredientFrom = RecipeService.prototype.deleteIngredientFrom;
