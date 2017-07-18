@@ -1,4 +1,7 @@
-import { Recipe } from "./recipe";
+import { Observable } from "rxjs/Observable";
+import "rxjs/add/operator/map";
+
+import { Recipe }     from "./recipe";
 import { RecipeGist } from "./recipe-gist";
 
 // The recipe filter interface
@@ -10,21 +13,40 @@ export interface RecipeFilter {
   timeMoreThan?: number;
 }
 
-// The filter function
-export function applyFilter(
-  filter: RecipeFilter, recipes: RecipeGist[]
+// Filter an array of recipe gists (or recipes)
+function filterArray(
+  filter: RecipeFilter, gists: RecipeGist[]
 ): RecipeGist[] {
-  return recipes.filter(recipe => (
-    !filter.timeMoreThan || (+recipe.time > filter.timeMoreThan)
+  return gists.filter(gist => (
+    !filter.timeMoreThan || (+gist.time > filter.timeMoreThan)
   ) && (
-    !filter.timeLessThan || (+recipe.time < filter.timeLessThan)
+    !filter.timeLessThan || (+gist.time < filter.timeLessThan)
   ) && (
-    !filter.nameIncludes || (recipe.name.includes(filter.nameIncludes))
+    !filter.nameIncludes || (gist.name.includes(filter.nameIncludes))
   ) && (
-    !filter.hasTags || (recipe.tags &&
-      filter.hasTags.every(tag => recipe.tags.includes(tag)))
+    !filter.hasTags || (gist.tags &&
+      filter.hasTags.every(tag => gist.tags.includes(tag)))
   ) && (
-    !filter.hasIngredients || (recipe.ingredients &&
-      filter.hasIngredients.every(ing => recipe.ingredients.includes(ing)))
+    !filter.hasIngredients || (gist.ingredients &&
+      filter.hasIngredients.every(ing => gist.ingredients.includes(ing)))
   ));
 }
+
+// Filter the recipe array of a passed observable
+function filterObservable(
+  filter: RecipeFilter, gistObservable: Observable<RecipeGist[]>
+): Observable<RecipeGist[]> {
+  return gistObservable.map(gists => filterArray(filter, gists));
+}
+
+// Filter the recipe array of a passed observable by tags
+function filterObservableByTags(
+  tags: string[], gistObservable: Observable<RecipeGist[]>
+): Observable<RecipeGist[]> {
+  return filterObservable({ hasTags: tags }, gistObservable);
+}
+
+//TODO:Figure out a better place to put these
+export const filterUtil = {
+  filterArray, filterObservable, filterObservableByTags
+};
