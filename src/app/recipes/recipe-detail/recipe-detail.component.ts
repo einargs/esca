@@ -4,7 +4,7 @@ import 'rxjs/add/operator/switchMap';
 import { Component, OnInit }                from '@angular/core';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 
-import { Recipe }                           from "../recipe";
+import { Recipe, recipeUtil }               from "../recipe";
 import { RecipeService }                    from "../recipe.service";
 
 @Component({
@@ -31,22 +31,22 @@ export class RecipeDetailComponent {
 
   // Add an ingredient
   addIngredient(ingredient: string): void {
-    this.service.addIngredientTo(this.recipe, ingredient);
+    recipeUtil.addIngredientTo(this.recipe, ingredient);
   }
 
   // Delete an ingredient
   deleteIngredient(ingredient: string): void {
-    this.service.deleteIngredientFrom(this.recipe, ingredient);
+    recipeUtil.deleteIngredientFrom(this.recipe, ingredient);
   }
 
   // Add a tag
   addTag(tag: string): void {
-    this.service.addTagTo(this.recipe, tag);
+    recipeUtil.addTagTo(this.recipe, tag);
   }
 
   // Delete a tag
   deleteTag(tag: string): void {
-    this.service.deleteTagFrom(this.recipe, tag);
+    recipeUtil.deleteTagFrom(this.recipe, tag);
   }
 
   // Save the recipe
