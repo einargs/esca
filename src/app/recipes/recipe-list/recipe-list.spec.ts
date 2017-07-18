@@ -20,6 +20,7 @@ import { MdDialog }               from "@angular/material";
 import { MaterialImportsModule }  from "../../imports/material-imports.module";
 
 import { BlankComponent }         from "../../../../testing/blank-component";
+import { mockRecipeService }      from "../../../../testing/mock-recipe-service";
 
 let component:      RecipeListComponent;
 let fixture:        ComponentFixture<RecipeListComponent>;
@@ -37,21 +38,6 @@ let genTestGists = () => [
   }
 ];
 
-function genMockRecipeService() {
-  let m = jasmine.createSpyObj("recipeService", [
-    "getCurrentUserRecipeGists", "deleteRecipe", "newRecipe"
-  ]);
-
-  m.newRecipe
-    .and.callFake(() => Promise.resolve("id"));
-  m.deleteRecipe
-    .and.callFake(() => Promise.resolve());
-  m.getCurrentUserRecipeGists
-    .and.callFake(() => Observable.of(genTestGists()));
-
-  return m;
-}
-
 describe('RecipeListComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -68,7 +54,14 @@ describe('RecipeListComponent', () => {
         RecipeListComponent
       ],
       providers:    [
-        { provide: RecipeService, useValue: genMockRecipeService() }
+        mockRecipeService(m => {
+          m.newRecipe
+            .and.callFake(() => Promise.resolve("id"));
+          m.deleteRecipe
+            .and.callFake(() => Promise.resolve());
+          m.getCurrentUserRecipeGists
+            .and.callFake(() => Observable.of(genTestGists()));
+        })
       ]
     })
     .compileComponents();
