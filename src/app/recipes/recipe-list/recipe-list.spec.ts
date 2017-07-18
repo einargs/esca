@@ -20,13 +20,37 @@ import { MdDialog }               from "@angular/material";
 import { MaterialImportsModule }  from "../../imports/material-imports.module";
 
 import { BlankComponent }         from "../../../../testing/blank-component";
-import { MockRecipeService }      from "../../../../testing/mock-recipe.service";
 
 let component:      RecipeListComponent;
 let fixture:        ComponentFixture<RecipeListComponent>;
 let recipeService:  RecipeService;
 let page:           Page;
-let dialog:         MdDialog;
+
+let genTestGists = () => [
+  {
+    $key: "1111",
+    owner_id: "weee",
+    name: "test",
+    tags: ["testing"],
+    time: 45,
+    ingredients: ["time"]
+  }
+];
+
+function genMockRecipeService() {
+  let m = jasmine.createSpyObj("recipeService", [
+    "getCurrentUserRecipeGists", "deleteRecipe", "newRecipe"
+  ]);
+
+  m.newRecipe
+    .and.callFake(() => Promise.resolve("id"));
+  m.deleteRecipe
+    .and.callFake(() => Promise.resolve());
+  m.getCurrentUserRecipeGists
+    .and.callFake(() => Observable.of(genTestGists()));
+
+  return m;
+}
 
 describe('RecipeListComponent', () => {
   beforeEach(async(() => {
@@ -44,7 +68,7 @@ describe('RecipeListComponent', () => {
         RecipeListComponent
       ],
       providers:    [
-        { provide: RecipeService, useClass: MockRecipeService }
+        { provide: RecipeService, useValue: genMockRecipeService() }
       ]
     })
     .compileComponents();
@@ -56,7 +80,6 @@ describe('RecipeListComponent', () => {
     page      = new Page();
 
     recipeService = fixture.debugElement.injector.get(RecipeService);
-    dialog        = fixture.debugElement.injector.get(MdDialog);
 
     component.openDeleteRecipeDialog = jasmine
       .createSpy("openDeleteRecipeDialog")
@@ -110,7 +133,7 @@ describe('RecipeListComponent', () => {
     expect(recipeService.deleteRecipe).toHaveBeenCalled();
   }));
 
-  it("should tell the service to make new recipes (fakeAsync)", fakeAsync(() => {
+  it("should tell the service to create recipes (fakeAsync)", fakeAsync(() => {
     tick();
     page.update();
 
