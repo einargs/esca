@@ -81,10 +81,6 @@ describe('RecipeListComponent', () => {
     page.update();
   });
 
-  it('should be created', () => {
-    expect(component).toBeTruthy();
-  });
-
   it("should show a list of recipes (async)", async(() => {
     fixture.whenStable().then(() => {
       fixture.detectChanges();
