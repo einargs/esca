@@ -19,8 +19,8 @@ import { RecipeGist }             from "../recipe-gist";
 import { MdDialog }               from "@angular/material";
 import { MaterialImportsModule }  from "../../imports/material-imports.module";
 
-import { BlankComponent }         from "../../../testing/blank-component";
-import { MockRecipeService }      from "../../../testing/mock-recipe.service";
+import { BlankComponent }         from "../../../../testing/blank-component";
+import { MockRecipeService }      from "../../../../testing/mock-recipe.service";
 
 let component:      RecipeListComponent;
 let fixture:        ComponentFixture<RecipeListComponent>;
