@@ -43,7 +43,7 @@
   </md-list>
 
   <md-input-container class="recipe-instructions mat-body-2">
-    <textarea mdInput
+    <textarea mdInput mdTextareaAutosize mdAutosizeMinRows="4"
       [(ngModel)]="recipe.instructions"
       placeholder="Instructions" name="instructions"></textarea>
   </md-input-container>
