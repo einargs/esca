@@ -1,3 +1,5 @@
+import { TagInputModule }               from "ngx-chips";
+
 import { NgModule }                     from "@angular/core";
 import { CommonModule }                 from "@angular/common";
 import { FormsModule }                  from "@angular/forms";
@@ -18,6 +20,7 @@ import { RecipesRoutingModule }         from "./recipes-routing.module";
     CommonModule,
     FormsModule,
     MaterialImportsModule,
+    TagInputModule,
     RecipesRoutingModule
   ],
   declarations: [

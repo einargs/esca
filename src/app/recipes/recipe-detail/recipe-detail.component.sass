@@ -8,6 +8,7 @@
 .detail-body
   display: flex
   flex-flow: row wrap
+  flex-grow: 1
   margin: 15pt
 
 
@@ -21,7 +22,7 @@
   display: block
   +full-width
 
-/* Recipe tags are a full width block */
+/* Recipe tag list is a full width block */
 .recipe-tags
   order: 2
   display: block
@@ -61,7 +62,6 @@
   order: 5
   display: block
   +full-width
-  //margin-top: 15pt
 
 /**/
 @media all and (min-width: 650px)
@@ -76,7 +76,8 @@
 
 
 /* Save button is an absolutely positioned FAB */
+//TODO:Figure out how to fix the bug with transform3d
 .save-button
-  position: absolute
+  position: fixed
   bottom: 10pt
   right: 10pt
