@@ -7,14 +7,13 @@
       placeholder="Name" name="name" />
   </md-input-container>
 
-  <md-input-container class="recipe-tags">
-    <input mdInput
-      [(ngModel)]="tagsAlias" type="text"
-      placeholder="Tags" name="tags" />
-  </md-input-container>
+  <tag-input
+    [(ngModel)]="recipe.tags"
+    placeholder="Add Tags" name="tags"
+    class="recipe-tags"></tag-input>
 
   <div class="recipe-stats">
-    <md-input-container class="recipe-time recipe-stat">
+    <md-input-container class="recipe-time recipe-stat" #timeCont>
       <input mdInput
         [(ngModel)]="recipe.time" type="number"
         placeholder="Time" name="time" />
@@ -37,13 +36,13 @@
       <md-input-container class="add-recipe-ingredient">
         <input mdInput #addIngredientInput
           (keyup.enter)="addIngredient(addIngredientInput.value); addIngredientInput.value = ''"
-          placeholder="Add Ingredient" name="addIngredient" />
+          placeholder="Add Ingredient" name="addIngredient" type="text" />
       </md-input-container>
     </md-list-item>
   </md-list>
 
-  <md-input-container class="recipe-instructions mat-body-2">
-    <textarea mdInput
+  <md-input-container class="recipe-instructions mat-body-1">
+    <textarea mdInput mdTextareaAutosize mdAutosizeMinRows="4"
       [(ngModel)]="recipe.instructions"
       placeholder="Instructions" name="instructions"></textarea>
   </md-input-container>
@@ -52,6 +51,6 @@
 <button md-fab
   [disabled]="!recipe"
   (click)="save()"
-  class="save-button">
+  class="save-button md-fab-bottom-right">
   <md-icon>save</md-icon>
 </button>

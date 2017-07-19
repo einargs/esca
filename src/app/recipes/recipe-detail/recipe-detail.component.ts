@@ -15,14 +15,6 @@ import { RecipeService }                    from "../recipe.service";
 export class RecipeDetailComponent {
   recipe: Recipe;
 
-  get tagsAlias(): string {
-    return this.recipe.tags ? this.recipe.tags.join(", ") : "";
-  }
-
-  set tagsAlias(tags: string) {
-    this.recipe.tags = tags.split(/,\s+/);
-  }
-
   constructor(
     private route: ActivatedRoute,
     private router: Router,
