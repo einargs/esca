@@ -3,11 +3,12 @@ import 'rxjs/add/operator/toPromise';
 import 'rxjs/add/operator/filter';
 
 import { Component }                        from '@angular/core';
-import { Router, ActivatedRoute, ParamMap } from '@angular/router';
+import { Router }                           from '@angular/router';
 import { MdDialog }                         from "@angular/material";
 
 import { Recipe }                           from "../recipe";
 import { RecipeGist }                       from "../recipe-gist";
+import { filterUtil }                       from "../recipe-filter";
 import { DeleteRecipeDialogComponent }      from "./delete-recipe-dialog.component";
 import { RecipeService }                    from "../recipe.service";
 import { UserService }                      from "../../user/user.service";
@@ -22,7 +23,6 @@ export class RecipeListComponent {
   recipes: Observable<RecipeGist[]> = this.raw;
 
   constructor(
-    private route:    ActivatedRoute,
     private router:   Router,
     private service:  RecipeService,
     public dialog:    MdDialog
@@ -38,7 +38,7 @@ export class RecipeListComponent {
 
   // Open the delete recipe dialog and retrieve the response
   //TODO:Clean up the promise bit. There must be a better way...
-  private openDeleteRecipeDialog(recipeName: string): Promise<boolean> {
+  openDeleteRecipeDialog(recipeName: string): Promise<boolean> {
     return this.dialog.open(DeleteRecipeDialogComponent, {
       data: recipeName
     }).afterClosed().toPromise();
@@ -53,8 +53,7 @@ export class RecipeListComponent {
 
   // Filter the shown recipes by tags
   filterByTags(tags: string[]): void {
-    console.log(tags);
-    this.recipes = this.service.filterByTags(tags, this.raw);
+    this.recipes = filterUtil.filterObservableByTags(tags, this.raw);
   }
 
   // Filter by a comma deliminated string of tags

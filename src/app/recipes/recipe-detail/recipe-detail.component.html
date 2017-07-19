@@ -25,7 +25,8 @@
     <md-list-item
       *ngFor="let ingredient of recipe.ingredients"
       class="recipe-ingredient">
-      <span md-line>{{ingredient}}</span>
+      <span md-line
+        class="ingredient-name">{{ingredient}}</span>
       <button md-icon-button
         (click)="deleteIngredient(ingredient)"
         type="button">
