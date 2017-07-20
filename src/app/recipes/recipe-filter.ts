@@ -14,6 +14,25 @@ export interface RecipeFilter {
   timeMoreThan?: number;
 }
 
+// Collection of utility methods that ignore case
+const IC = {
+  // See if an array of strings is a subset of another array of strings
+  // and ignore case for comparison
+  isSubset(subset: string[], superset: string[]) {
+    // Lower case arrays
+    let lowerCaseSubset = subset.map(e => e.toLowerCase());
+    let lowerCaseSuperset = superset.map(e => e.toLowerCase());
+
+    return lowerCaseSubset.every(e => lowerCaseSuperset.includes(e));
+  },
+
+  // See if a string is a substring of another string
+  // and ignore case for comparison
+  isSubstring(subString: string, superString: string) {
+    return superString.toLowerCase().includes(subString.toLowerCase());
+  }
+};
+
 // Filter an array of recipe gists (or recipes)
 function filterArray(
   filter: RecipeFilter,
@@ -24,13 +43,13 @@ function filterArray(
   ) && (
     !filter.timeLessThan || (+gist.time < filter.timeLessThan)
   ) && (
-    !filter.nameIncludes || (gist.name.includes(filter.nameIncludes))
+    !filter.nameIncludes || (IC.isSubstring(filter.nameIncludes, gist.name))
   ) && (
-    !filter.hasTags || (gist.tags &&
-      filter.hasTags.every(tag => gist.tags.includes(tag)))
+    !filter.hasTags || (gist.tags && IC.isSubset(filter.hasTags, gist.tags))
   ) && (
     !filter.hasIngredients || (gist.ingredients &&
-      filter.hasIngredients.every(ing => gist.ingredients.includes(ing)))
+      IC.isSubset(filter.hasIngredients, gist.ingredients)
+    )
   ));
 }
 
