@@ -14,8 +14,8 @@ module.exports = function (config) {
     ],
     files: [
       { pattern: 'node_modules/hammerjs/hammer.js' },
-      { pattern: "./src/assets/roboto.css" },
-      { pattern: "./src/assets/material_icons.css" },
+      { pattern: "./testing/local-styles/roboto.css" },
+      { pattern: "./testing/local-styles/material_icons.css" },
       { pattern: "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css" }
     ],
     client:{
