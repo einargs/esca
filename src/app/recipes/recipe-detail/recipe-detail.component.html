@@ -8,8 +8,11 @@
   </md-input-container>
 
   <tag-input
+    modelAsStrings="true"
     [(ngModel)]="recipe.tags"
-    placeholder="Add Tags" name="tags"
+    placeholder="Add tags"
+    secondaryPlaceholder="Add tags"
+    name="tags"
     class="recipe-tags"></tag-input>
 
   <div class="recipe-stats">
