@@ -1,0 +1,38 @@
+// Theme the tag-input component
+@import "indigo-pink-theme.sass";
+@import "../../node_modules/ngx-chips/dist/modules/core/styles/core/_core.scss";
+
+$ngx-chips-theme: (
+  container-border-bottom-focused: 2px solid mat-color($primary) !important
+);
+
+$ngx-chips-tag-theme: (
+  background-focused: mat-color($accent, 500) !important,
+  color-focused: mat-contrast($accent, 500) !important,
+  background-active: mat-color($accent, 500) !important,
+  color-active: mat-contrast($accent, 500) !important,
+  background-hover: mat-color($accent, 500) !important,
+  color-hover: mat-contrast($accent, 500) !important
+);
+
+$ngx-chips-focused-icon-theme: (
+  fill-focus: mat-contrast($accent, 500) !important
+);
+
+/deep/ .ng2-tag-input {
+  @include tag-input-theme($ngx-chips-theme);
+
+  tag {
+    @include tag-theme($ngx-chips-tag-theme);
+
+    &:focus, &:active, &:hover {
+      delete-icon {
+        @include icon-theme-focused($ngx-chips-focused-icon-theme);
+      }
+    }
+  }
+
+  input {
+    background-color: inherit;
+  }
+}
