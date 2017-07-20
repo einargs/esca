@@ -1,8 +1,12 @@
-<md-input-container class="filter">
-  <input mdInput #filter
-    (change)="filterByTagString(filter.value)"
-    placeholder="Filter By Tags" name="filter" />
-</md-input-container>
+<tag-input #tagFilter
+  modelAsStrings="true"
+  [(ngModel)]="filter.hasTags"
+  (ngModelChange)="updateFilter()"
+  placeholder="Filter by tags"
+  secondaryPlaceholder="Filter by tags"
+  name="tag-filter"
+  class="tag-filter"></tag-input>
+
 <md-nav-list class="list">
   <md-list-item
     *ngFor="let recipe of recipes | async"

@@ -1,6 +1,6 @@
 import { Observable }                       from "rxjs/Observable";
+import { BehaviorSubject }                  from "rxjs/BehaviorSubject";
 import 'rxjs/add/operator/toPromise';
-import 'rxjs/add/operator/filter';
 
 import { Component }                        from '@angular/core';
 import { Router }                           from '@angular/router';
@@ -8,7 +8,7 @@ import { MdDialog }                         from "@angular/material";
 
 import { Recipe }                           from "../recipe";
 import { RecipeGist }                       from "../recipe-gist";
-import { filterUtil }                       from "../recipe-filter";
+import { RecipeFilter, filterUtil }         from "../recipe-filter";
 import { DeleteRecipeDialogComponent }      from "./delete-recipe-dialog.component";
 import { RecipeService }                    from "../recipe.service";
 import { UserService }                      from "../../user/user.service";
@@ -19,8 +19,16 @@ import { UserService }                      from "../../user/user.service";
   styleUrls: [ "./recipe-list.component.sass" ]
 })
 export class RecipeListComponent {
-  raw: Observable<RecipeGist[]> = this.service.getCurrentUserRecipeGists();
-  recipes: Observable<RecipeGist[]> = this.raw;
+  filter: RecipeFilter = {
+    hasTags: []
+  };
+
+  filterSubject: BehaviorSubject<RecipeFilter> = new BehaviorSubject(this.filter);
+
+  recipes: Observable<RecipeGist[]> = filterUtil.makeFilteredObservable(
+    this.filterSubject,
+    this.service.getCurrentUserRecipeGists()
+  );
 
   constructor(
     private router:   Router,
@@ -51,13 +59,8 @@ export class RecipeListComponent {
     if (confirmation) await this.service.deleteRecipe(recipe);
   }
 
-  // Filter the shown recipes by tags
-  filterByTags(tags: string[]): void {
-    this.recipes = filterUtil.filterObservableByTags(tags, this.raw);
-  }
-
-  // Filter by a comma deliminated string of tags
-  filterByTagString(tags: string): void {
-    this.filterByTags(tags.split(/,\s+/).filter(tag => tag!==""));
+  //
+  updateFilter(): void {
+    this.filterSubject.next(this.filter);
   }
 }
