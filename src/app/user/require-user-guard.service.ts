@@ -1,5 +1,6 @@
 import { Injectable }   from "@angular/core";
 import {
+  CanActivateChild,
   CanActivate, Router,
   ActivatedRouteSnapshot,
   RouterStateSnapshot
@@ -8,7 +9,7 @@ import {
 import { UserService }  from "./user.service";
 
 @Injectable()
-export class RequireUserGuard implements CanActivate {
+export class RequireUserGuard implements CanActivate, CanActivateChild {
   constructor(
     private userService: UserService,
     private router: Router
@@ -33,5 +34,12 @@ export class RequireUserGuard implements CanActivate {
       this.promptSignInAndRedirect(state.url);
       return false;
     }
+  }
+
+  canActivateChild(
+    route: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot
+  ): boolean {
+    return this.canActivate(route, state);
   }
 }

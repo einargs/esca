@@ -9,13 +9,12 @@ import { RequireUserGuard }       from "../user/require-user-guard.service";
 
 const recipesRoutes: Routes = [
   {
-    path: "recipe",
-    component: RecipeListComponent,
-    canActivate: [RequireUserGuard]
-  },{ 
-    path: "recipe/:id",
-    component: RecipeDetailComponent,
-    canActivate: [RequireUserGuard]
+    path: "",
+    canActivateChild: [RequireUserGuard],
+    children: [
+      { path: "", component: RecipeListComponent },
+      { path: ":id", component: RecipeDetailComponent }
+    ]
   }
 ];
 

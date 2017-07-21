@@ -5,6 +5,7 @@ import 'rxjs/add/operator/mapTo';
 import 'rxjs/add/operator/multicast';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/first';
+import 'rxjs/add/operator/toPromise';
 
 import { Injectable }                   from '@angular/core';
 import { MdDialog }                     from "@angular/material";
