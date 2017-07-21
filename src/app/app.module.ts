@@ -18,7 +18,6 @@ import { ImportsModule }                from './imports/imports.module';
 import { FireSetupModule }              from "./fire-setup.module";
 import { UserModule }                   from "./user/user.module";
 import { HomeModule }                   from "./home/home.module";
-import { RecipesModule }                from "./recipes/recipes.module";
 import { AppRoutingModule }             from "./app-routing.module";
 import { UserService }                  from "./user/user.service";
 
@@ -30,7 +29,6 @@ import { UserService }                  from "./user/user.service";
     ImportsModule,
     UserModule,
     HomeModule,
-    RecipesModule,
     AppRoutingModule
   ],
   declarations: [

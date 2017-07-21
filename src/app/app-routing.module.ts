@@ -4,6 +4,7 @@ import {RouterModule, Routes } from "@angular/router";
 import { NotFoundComponent } from "./not-found.component";
 
 const routes: Routes = [
+  { path: "recipe", loadChildren: "app/recipes/recipes.module#RecipesModule" },
   { path: "**", component: NotFoundComponent }
 ];
 

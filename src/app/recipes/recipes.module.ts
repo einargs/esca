@@ -32,8 +32,8 @@ import { RecipesRoutingModule }         from "./recipes-routing.module";
     DeleteRecipeDialogComponent
   ],
   providers: [
-    RecipeService,
-    UserService
+    UserService,
+    RecipeService
   ]
 })
 export class RecipesModule {}
