@@ -1,14 +1,14 @@
 @import "../../../theming/_theme-tag-input.scss"
 @import "../../../theming/theme-list-icons"
 
-/* Center the form */
+/* Center the form
 \:host
   display: flex
   flex-grow: 1
   justify-content: center
 
-/* Use flexbox for the form */
-.detail-body
+/* Use flexbox for the form
+.recipe-form
   display: flex
   flex-flow: row wrap
   flex-grow: 1
@@ -19,26 +19,26 @@
 =full-width
   flex: 1 100%
 
-/* Recipe title is a full-width block */
+/* Recipe title is a full-width block
 .recipe-title
   order: 1
   display: block
   +full-width
 
-/* Recipe tag list is a full width block */
+/* Recipe tag list is a full width block
 .recipe-tags
   order: 2
   display: block
   +full-width
 
-/* Recipe stat field container is a full-width flex container */
+/* Recipe stat field container is a full-width flex container
 .recipe-stats
   order: 3
   display: flex
   flex-flow: row wrap
   +full-width
 
-/* Recipe stat fields take up an equal amount of space in their container */
+/* Recipe stat fields take up an equal amount of space in their container
 .recipe-stat
   flex: 1 0
 
@@ -48,7 +48,7 @@
   display: block
   +full-width
 
-/* The delete ingredient icon is themed as a list icon */
+/* The delete ingredient icon is themed as a list icon
 .delete-ingredient-icon
   +theme-list-icons(".recipe-ingredient", ".delete-ingredient")
 
@@ -56,13 +56,16 @@
 .add-recipe-ingredient
   width: 100%
 
-/* Recipe instruction text field is a full-width block */
+/* Recipe instruction text field is a full-width block
 .recipe-instructions
   order: 5
   display: block
   +full-width
 
-/**/
+  textarea
+    resize: none
+
+/* Breakpoints
 @media all and (min-width: 650px)
   .recipe-ingredients
     order: 3
@@ -72,6 +75,9 @@
     order: 4
     flex: 1 0
     flex-flow: column nowrap
+
+  .recipe-stat
+    flex: 0 0
 
 
 /* Save button is an absolutely positioned FAB */
