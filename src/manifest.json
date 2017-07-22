@@ -3,7 +3,7 @@
   "short_name": "Esca",
   "theme_color": "#3f51b5",
   "background_color": "#fafafa",
-  "start_url": "/index.html",
+  "start_url": "/esca/index.html",
   "display": "standalone",
   "orientation": "portrait"
 }
