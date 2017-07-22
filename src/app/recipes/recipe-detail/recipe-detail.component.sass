@@ -1,4 +1,5 @@
 @import "../../../theming/_theme-tag-input.scss"
+@import "../../../theming/theme-list-icons"
 
 /* Center the form */
 \:host
@@ -47,13 +48,9 @@
   display: block
   +full-width
 
-/* The delete ingredient icon is normally transparent */
+/* The delete ingredient icon is themed as a list icon */
 .delete-ingredient-icon
-  opacity: 0.4
-
-/* When the ingredient item is hovered over, the icon becomes visible */
-.recipe-ingredient:hover .delete-ingredient-icon
-  opacity: 1
+  +theme-list-icons(".recipe-ingredient", ".delete-ingredient")
 
 /**/
 .add-recipe-ingredient

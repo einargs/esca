@@ -1,0 +1,23 @@
+@import "theme"
+
+=theme-list-icons($item-selector: ".mat-list-item", $button-selector: ".mat-icon-button", $list-selector: false)
+  =theme-list-content
+    @if map-get($theme, is-dark)
+      opacity: .50
+      #{$item-selector}:hover &
+        opacity: .70
+      #{$button-selector}:hover &
+        opacity: 1
+    @else
+      opacity: .38
+      #{$item-selector}:hover &
+        opacity: .54
+      #{$button-selector}:hover &
+        opacity: .87
+
+  // If a list selector is passed, scope the styles to inside that selector
+  @if $list-selector
+    #{$list-selector} &
+      +theme-list-content
+  @else
+    +theme-list-content
