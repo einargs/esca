@@ -1,9 +1,8 @@
 import { Observable }             from "rxjs/Observable";
 import "rxjs/add/observable/of";
 
-import { CommonModule }           from "@angular/common";
-import { FormsModule }            from "@angular/forms";
-import { Router, ActivatedRoute } from "@angular/router";
+import { NgForm }                 from "@angular/forms";
+import { ActivatedRoute }         from "@angular/router";
 import { RouterTestingModule }    from "@angular/router/testing";
 import { By }                     from "@angular/platform-browser";
 import { DebugElement }           from "@angular/core";
@@ -12,11 +11,12 @@ import {
   ComponentFixture, TestBed
 }                                 from '@angular/core/testing';
 
+import { RecipesModule }          from "../recipes.module";
 import { RecipeDetailComponent }  from "./recipe-detail.component";
 import { RecipeService }          from "../recipe.service";
 import { Recipe }                 from "../recipe";
 
-import { MaterialImportsModule }  from "../../imports/material-imports.module";
+import { ImportsModule }          from "../../imports/imports.module";
 
 import { mockRecipeService }      from "../../../../testing/mock-recipe-service";
 
@@ -42,13 +42,9 @@ describe("RecipeDetailComponent", () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports:      [
-        CommonModule,
-        FormsModule,
-        MaterialImportsModule,
+        ImportsModule,
+        RecipesModule,
         RouterTestingModule
-      ],
-      declarations: [
-        RecipeDetailComponent
       ],
       providers:    [
         mockRecipeService(m => {
@@ -149,10 +145,28 @@ describe("RecipeDetailComponent", () => {
 
     expect(recipeService.saveRecipe).toHaveBeenCalled();
   }));
+
+  it("should handle validation (async)", async(async () => {
+    await fixture.whenStable();
+    page.update();
+
+    expect(page.form.valid).toBe(true);
+    expect(page.saveButton.disabled).toBe(false);
+
+    recipe().name = "";
+
+    page.update();
+    await fixture.whenStable();
+    page.update();
+
+    expect(page.form.valid).toBe(false);
+    expect(page.saveButton.disabled).toBe(true);
+  }));
 });
 
 class Page {
   saveButton:   HTMLButtonElement;
+  form:         NgForm;
 
   title:        string;
   time:         number;
@@ -162,7 +176,12 @@ class Page {
   loadElements() {
     let f = fixture.debugElement;
 
-    this.title        = f
+    this.form         = f
+      .query(By.css("form"))
+      .references
+      .recipeForm;
+
+    this.nameInput    = f
       .query(By.css(".recipe-title input"))
       .nativeElement
       .value;

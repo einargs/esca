@@ -1,10 +1,14 @@
-<form *ngIf="recipe"
+<form
+  *ngIf="recipe"
   #recipeForm="ngForm"
-  class="detail-body">
+  class="recipe-form">
   <md-input-container class="recipe-title mat-h1">
     <input mdInput
+      #name="ngModel"
+      required
       [(ngModel)]="recipe.name" type="text"
       placeholder="Name" name="name" />
+    <md-error *ngIf="name.hasError('required')">Recipe name is required</md-error>
   </md-input-container>
 
   <tag-input
@@ -16,9 +20,11 @@
     class="recipe-tags"></tag-input>
 
   <div class="recipe-stats">
-    <md-input-container class="recipe-time recipe-stat" #timeCont>
+    <md-input-container class="recipe-time recipe-stat">
       <input mdInput
-        [(ngModel)]="recipe.time" type="number"
+        #time="ngModel"
+        [(ngModel)]="recipe.time"
+        type="number" min="0"
         placeholder="Time" name="time" />
     </md-input-container>
   </div>
@@ -50,11 +56,12 @@
       [(ngModel)]="recipe.instructions"
       placeholder="Instructions" name="instructions"></textarea>
   </md-input-container>
-</form>
 
-<button md-fab
-  [disabled]="!recipe"
-  (click)="save()"
-  class="save-button md-fab-bottom-right">
-  <md-icon>save</md-icon>
-</button>
+  <button md-fab
+    [disabled]="!recipeForm?.valid"
+    (click)="save()"
+    type="button"
+    class="save-button md-fab-bottom-right">
+    <md-icon>save</md-icon>
+  </button>
+</form>

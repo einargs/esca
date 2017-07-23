@@ -1,9 +1,6 @@
 import { Observable }             from "rxjs/Observable";
 import "rxjs/add/observable/of";
 
-import { CommonModule }           from "@angular/common";
-import { FormsModule }            from "@angular/forms";
-import { Router }                 from "@angular/router";
 import { RouterTestingModule }    from "@angular/router/testing";
 import { By }                     from "@angular/platform-browser";
 import { DebugElement }           from "@angular/core";
@@ -12,12 +9,12 @@ import {
   ComponentFixture, TestBed
 }                                 from '@angular/core/testing';
 
+import { RecipesModule }          from "../recipes.module";
 import { RecipeListComponent }    from './recipe-list.component';
 import { RecipeService }          from "../recipe.service";
 import { RecipeGist }             from "../recipe-gist";
 
-import { MdDialog }               from "@angular/material";
-import { MaterialImportsModule }  from "../../imports/material-imports.module";
+import { ImportsModule }          from "../../imports/imports.module";
 
 import { BlankComponent }         from "../../../../testing/blank-component";
 import { mockRecipeService }      from "../../../../testing/mock-recipe-service";
@@ -42,16 +39,15 @@ describe('RecipeListComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports:      [
-        CommonModule,
-        FormsModule,
-        MaterialImportsModule,
+        ImportsModule,
+        RecipesModule,
         RouterTestingModule.withRoutes([
           { path: "recipe/:id", component: BlankComponent }
         ])
       ],
       declarations: [
         BlankComponent,
-        RecipeListComponent
+        //RecipeListComponent
       ],
       providers:    [
         mockRecipeService(m => {
@@ -97,14 +93,14 @@ describe('RecipeListComponent', () => {
     expect(page.listItems.length).toBe(1);
     expect(page.listedRecipes).toContain("test");
 
-    component.filterByTags(["chicken"]);
+    page.filterByTags(["chicken"]);
     tick();
     page.update();
 
     expect(page.listItems.length).toBe(0);
     expect(page.listedRecipes).not.toContain("test");
 
-    component.filterByTags(["testing"]);
+    page.filterByTags(["testing"]);
     tick();
     page.update();
 
@@ -173,5 +169,10 @@ class Page {
   update() {
     fixture.detectChanges();
     this.loadElements();
+  }
+
+  filterByTags(tags: string[]) {
+    component.filter = { hasTags: tags };
+    component.updateFilter();
   }
 }
