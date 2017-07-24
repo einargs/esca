@@ -6,6 +6,7 @@ import { FormsModule }                  from "@angular/forms";
 import { RouterModule }                 from "@angular/router";
 
 import { RecipeDetailComponent }        from "./recipe-detail/recipe-detail.component";
+import { ConfirmNavDialogComponent }    from "./recipe-detail/confirm-nav-dialog.component";
 import { RecipeListComponent }          from "./recipe-list/recipe-list.component";
 import { DeleteRecipeDialogComponent }  from "./recipe-list/delete-recipe-dialog.component";
 
@@ -26,10 +27,12 @@ import { RecipesRoutingModule }         from "./recipes-routing.module";
   declarations: [
     RecipeDetailComponent,
     RecipeListComponent,
-    DeleteRecipeDialogComponent
+    DeleteRecipeDialogComponent,
+    ConfirmNavDialogComponent
   ],
   entryComponents: [
-    DeleteRecipeDialogComponent
+    DeleteRecipeDialogComponent,
+    ConfirmNavDialogComponent
   ],
   providers: [
     UserService,

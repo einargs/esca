@@ -1,8 +1,9 @@
 //import { Observable }                       from "rxjs/Observable";
 import 'rxjs/add/operator/switchMap';
 
-import { Component, OnInit }                from '@angular/core';
+import { Component, OnInit, ViewChild }     from '@angular/core';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
+import { NgForm }                           from "@angular/forms";
 
 import { Recipe, recipeUtil }               from "../recipe";
 import { RecipeService }                    from "../recipe.service";
@@ -13,6 +14,8 @@ import { RecipeService }                    from "../recipe.service";
   styleUrls: [ "./recipe-detail.component.sass" ]
 })
 export class RecipeDetailComponent {
+  @ViewChild("recipeForm") form: NgForm;
+
   recipe: Recipe;
 
   constructor(
@@ -42,8 +45,9 @@ export class RecipeDetailComponent {
   }
 
   // Save the recipe
-  save(): void {
-    this.service.saveRecipe(this.recipe);
+  async save(): Promise<void> {
+    await this.service.saveRecipe(this.recipe);
+    this.form.form.markAsPristine();
   }
 
   ngOnInit(): void {
