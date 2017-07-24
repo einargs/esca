@@ -6,6 +6,7 @@ import { RecipeDetailComponent }  from "./recipe-detail/recipe-detail.component"
 
 import { UserService }            from "../user/user.service";
 import { RequireUserGuard }       from "../user/require-user-guard.service";
+import { RecipeSavedGuard }       from "./recipe-detail/recipe-saved-guard.service";
 
 const recipesRoutes: Routes = [
   {
@@ -13,7 +14,11 @@ const recipesRoutes: Routes = [
     canActivateChild: [RequireUserGuard],
     children: [
       { path: "", component: RecipeListComponent },
-      { path: ":id", component: RecipeDetailComponent }
+      {
+        path: ":id",
+        component: RecipeDetailComponent,
+        canDeactivate: [RecipeSavedGuard]
+      }
     ]
   }
 ];
@@ -26,7 +31,8 @@ const recipesRoutes: Routes = [
     RouterModule
   ],
   providers: [
-    RequireUserGuard
+    RequireUserGuard,
+    RecipeSavedGuard
   ]
 })
 export class RecipesRoutingModule {}
