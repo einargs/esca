@@ -51,11 +51,9 @@ export class RecipeDetailComponent {
   }
 
   ngOnInit(): void {
-    this.route.paramMap
-      .switchMap((params: ParamMap) =>
-        this.service.getRecipe(params.get("id")))
-      .subscribe(recipe => {
-        this.recipe = recipe;
+    this.route.data
+      .subscribe((data: any) => {
+        data.recipe.subscribe(recipe => this.recipe = recipe);
       });
   }
 }
