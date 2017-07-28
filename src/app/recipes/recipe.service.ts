@@ -8,7 +8,9 @@ import * as firebase                    from 'firebase/app';
 
 import { UserService }                  from "../user/user.service";
 import { Recipe }                       from "./recipe";
-import { RecipeGist }                   from "./recipe-gist";
+import { RecipeGist, recipeGistUtil }   from "./recipe-gist";
+
+import * as dbUtil                      from "./db-util";
 
 @Injectable()
 export class RecipeService {
@@ -18,7 +20,8 @@ export class RecipeService {
   ) {}
 
   getUserRecipeGists(userId: string): Observable<RecipeGist[]> {
-    return this.db.list(`/recipe-gists-by-user/${userId}`);
+    return this.db.list(`/recipe-gists-by-user/${userId}`)
+      .map(gists => gists.map(dbUtil.buildGist));
   }
 
   getCurrentUserRecipeGists(): Observable<RecipeGist[]> {
@@ -27,7 +30,8 @@ export class RecipeService {
   }
 
   getRecipe(id: string): Observable<Recipe> {
-    return this.db.object(`/recipe/${id}`);
+    return this.db.object(`/recipe/${id}`)
+      .map(dbUtil.buildRecipe);
   }
 
   // Create a brand-new recipe
@@ -37,18 +41,13 @@ export class RecipeService {
     if (!uid) throw Error("User not logged in");
 
     let key = this.db.list("/recipe").push({
-      owner_id: uid,
-      name: "New Recipe",
-      tags: [],
-      time: 0,
-      ingredients: [],
-      instructions: []
+      ownerId: uid,
+      name: "New Recipe"
     }).key;
 
     this.db.object(`/recipe-gists-by-user/${uid}/${key}`).set({
-      owner_id: uid,
-      name: "New Recipe",
-      time: 0
+      ownerId: uid,
+      name: "New Recipe"
     });
 
     return key;
@@ -56,13 +55,12 @@ export class RecipeService {
 
   // Delete a recipe
   async deleteRecipe(recipe: Recipe): Promise<void> {
-    if (!recipe) throw Error("Must pass id for deletion");
+    if (!recipe) throw Error("Must pass recipe for deletion");
 
-    let id = recipe.$key;
-    let uid = recipe.owner_id;
+    let { id, ownerId } = recipe;
 
     let p1 = this.db.list("/recipe").remove(id);
-    let p2 = this.db.list(`/recipe-gists-by-user/${uid}`).remove(id);
+    let p2 = this.db.list(`/recipe-gists-by-user/${ownerId}`).remove(id);
 
     await p1;
     await p2;
@@ -72,17 +70,14 @@ export class RecipeService {
   async saveRecipe(recipe: Recipe): Promise<void> {
     if (!recipe) throw Error("Must pass recipe to be saved");
 
-    let {
-      $key, owner_id="", name="", time=0,
-      tags=[], ingredients=[], instructions=""
-    } = recipe;
+    let { id, ownerId } = recipe;
 
-    let recUpdate = this.db.object(`/recipe/${$key}`).update({
-      owner_id, name, time, tags, ingredients, instructions
-    });
-    let gistUpdate = this.db.object(`/recipe-gists-by-user/${owner_id}/${$key}`).update({
-      owner_id, name, time, tags, ingredients
-    });
+    let serverRecipe = dbUtil.buildServerRecipe(recipe);
+    let gist = recipeGistUtil.buildGist(recipe);
+    let serverGist = dbUtil.buildServerGist(gist);
+
+    let recUpdate = this.db.object(`/recipe/${id}`).update(serverRecipe);
+    let gistUpdate = this.db.object(`/recipe-gists-by-user/${ownerId}/${id}`).update(serverGist);
 
     await recUpdate;
     await gistUpdate;

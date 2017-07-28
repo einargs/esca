@@ -12,7 +12,7 @@
     *ngFor="let recipe of recipes | async"
     class="recipe-item">
     <a md-line
-      [routerLink]="['/recipe', recipe.$key]">{{recipe.name}}</a>
+      [routerLink]="['/recipe', recipe.id]">{{recipe.name}}</a>
     <button md-icon-button
       (click)="deleteRecipe(recipe)"
       type="button"

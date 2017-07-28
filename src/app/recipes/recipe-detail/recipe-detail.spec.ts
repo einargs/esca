@@ -29,8 +29,8 @@ let page:           Page;
 let recipe = () => component.recipe;
 
 let genTestRecipe = () => ({
-  $key: "1111",
-  owner_id: "weee",
+  id: "1111",
+  ownerId: "weee",
   name: "test",
   tags: ["testing", "test"],
   time: 45,
