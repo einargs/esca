@@ -8,7 +8,7 @@
       required
       type="text"
       placeholder="Name" />
-    <md-error *ngIf="recipeForm.controls.name.hasError('required')">Recipe name is required</md-error>
+    <md-error *ngIf="name.hasError('required')">Recipe name is required</md-error>
   </md-input-container>
 
   <tag-input

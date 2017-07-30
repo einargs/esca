@@ -6,6 +6,7 @@ import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import {
   FormBuilder,
   FormGroup,
+  FormArray,
   FormControl,
   Validators
 }                                           from "@angular/forms";
@@ -21,6 +22,18 @@ import { RecipeService }                    from "../recipe.service";
 export class RecipeDetailComponent {
   recipeForm: FormGroup;
 
+  // Aliases for form controls
+  get name(): FormControl
+  { return this.recipeForm.controls.name as FormControl; }
+  get time(): FormControl
+  { return this.recipeForm.controls.time as FormControl; }
+  get tags(): FormControl
+  { return this.recipeForm.controls.tags as FormControl; }
+  get ingredients(): FormControl
+  { return this.recipeForm.controls.ingredients as FormControl; }
+  get instructions(): FormControl
+  { return this.recipeForm.controls.instructions as FormControl; }
+
   recipe: Recipe;
 
   constructor(
@@ -28,7 +41,9 @@ export class RecipeDetailComponent {
     private router: Router,
     private service: RecipeService,
     private fb: FormBuilder
-  ) {}
+  ) {
+    this.createForm();
+  }
 
   // Save the recipe
   async save(): Promise<void> {
@@ -57,7 +72,6 @@ export class RecipeDetailComponent {
   }
 
   ngOnInit(): void {
-    this.createForm();
     this.route.data
       .subscribe((data: any) => {
         data.recipe.subscribe(recipe => {

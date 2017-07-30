@@ -5,6 +5,11 @@ import {
   Component
 } from "@angular/core";
 import {
+  FormGroupDirective,
+  FormGroup,
+  FormArray,
+  FormControl,
+  FormBuilder,
   NG_VALUE_ACCESSOR,
   ControlValueAccessor
 } from "@angular/forms";
@@ -22,40 +27,63 @@ export const ITEM_LIST_CONTROL_VALUE_ACCESSOR: any = {
   providers: [ITEM_LIST_CONTROL_VALUE_ACCESSOR]
 })
 export class ItemListComponent implements ControlValueAccessor {
-  @Input() items: string[] = [];
-  @Output() itemsChange = new EventEmitter();
-
   @Input() placeholder: string = "Add item";
   @Input() disabled: boolean = false;
 
-  // Listeners for ControlValueAccessor
-  private onChange = (_:any)=>{};
-  private onTouched = ()=>{};
+  listForm: FormGroup;
+  get itemsArray(): FormArray {
+    return this.listForm.get("items") as FormArray;
+  }
+  get itemValues(): string[] {
+    return this.itemsArray.value;
+  }
 
-  private notifyOfItemsChange(): void {
-    this.onChange(this.items);
-    this.itemsChange.emit(this.items);
+  constructor(
+    private fb: FormBuilder
+  ) {
+    this.createForm();
+    this.listForm.valueChanges.subscribe(val => {
+      this.onChange(val.items);
+    });
+  }
+
+  createForm(): void {
+    this.listForm = this.fb.group({
+      items: this.fb.array([])
+    });
+  }
+
+  loadItems(items: string[]): void {
+    let itemControls = items.map(item => this.fb.control(item));
+    let itemsArray = this.fb.array(itemControls);
+    this.listForm.setControl("items", itemsArray);
   }
 
   deleteItem(itemIndex: number): void {
-    this.items.splice(itemIndex, 1);
-    this.notifyOfItemsChange();
+    this.itemsArray.removeAt(itemIndex);
   }
 
   addItem(item: string): void {
-    this.items.push(item);
-    this.notifyOfItemsChange();
+    this.itemsArray.push(this.fb.control(item));
+  }
+
+
+  itemErrorStateMatcher(control: FormControl, form: FormGroupDirective) {
+    return Boolean(control && control.invalid);
   }
 
 
   // Implementation of ControlValueAccessor
+  private onChange = (_:any)=>{};
+  private onTouched = ()=>{};
+
   writeValue(val: any) {
-    this.items = val;
+    this.loadItems(val);
   }
 
   registerOnChange(fn: any) {
     this.onChange = fn;
-    fn(this.items);
+    fn(this.itemValues);
   }
 
   registerOnTouched(fn: any) {
