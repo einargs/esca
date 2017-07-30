@@ -30,10 +30,11 @@ export class RecipeSavedGuard implements CanDeactivate<RecipeDetailComponent> {
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): Promise<boolean> {
-    if (component.form.pristine) return true;
+    let form = component.recipeForm;
 
-    let savable = component.form.valid;
-    console.log(savable);
+    if (form.pristine) return true;
+
+    let savable = form.valid;
     let res = await this.prompt(savable);
 
     switch (res) {

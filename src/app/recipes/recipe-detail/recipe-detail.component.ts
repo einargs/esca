@@ -3,7 +3,12 @@ import 'rxjs/add/operator/switchMap';
 
 import { Component, OnInit, ViewChild }     from '@angular/core';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
-import { NgForm }                           from "@angular/forms";
+import {
+  FormBuilder,
+  FormGroup,
+  FormControl,
+  Validators
+}                                           from "@angular/forms";
 
 import { Recipe }                           from "../recipe";
 import { RecipeService }                    from "../recipe.service";
@@ -14,38 +19,51 @@ import { RecipeService }                    from "../recipe.service";
   styleUrls: [ "./recipe-detail.component.sass" ]
 })
 export class RecipeDetailComponent {
-  @ViewChild("recipeForm") form: NgForm;
+  recipeForm: FormGroup;
 
   recipe: Recipe;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private service: RecipeService
+    private service: RecipeService,
+    private fb: FormBuilder
   ) {}
-
-  // Add an ingredient
-  addIngredient(ingredient: string): void {
-    this.recipe.ingredients.push(ingredient);
-  }
-
-  // Delete an ingredient
-  deleteIngredient(ingredient: string): void {
-    let ingredients = this.recipe.ingredients;
-    let location = ingredients.indexOf(ingredient);
-    ingredients.splice(location, 1);
-  }
 
   // Save the recipe
   async save(): Promise<void> {
-    await this.service.saveRecipe(this.recipe);
-    this.form.form.markAsPristine();
+    //await this.service.saveRecipe(this.recipe);
+    //this.form.form.markAsPristine();
+  }
+
+  createForm(): void {
+    this.recipeForm = this.fb.group({
+      name: ["", Validators.required],
+      time: 0,
+      tags: [[]],
+      ingredients: [[]],
+      instructions: ""
+    });
+  }
+
+  loadDataModel(recipe: Recipe): void {
+    this.recipeForm.reset({
+      name: recipe.name,
+      time: recipe.time,
+      tags: recipe.tags,
+      ingredients: recipe.ingredients,
+      instructions: recipe.instructions
+    });
   }
 
   ngOnInit(): void {
+    this.createForm();
     this.route.data
       .subscribe((data: any) => {
-        data.recipe.subscribe(recipe => this.recipe = recipe);
+        data.recipe.subscribe(recipe => {
+          this.recipe = recipe;
+          this.loadDataModel(recipe);
+        });
       });
   }
 }
