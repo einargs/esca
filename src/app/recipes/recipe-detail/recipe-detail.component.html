@@ -61,7 +61,7 @@
   </md-input-container>
 
   <button md-fab
-    [disabled]="!recipeForm?.valid || recipeForm?.pristine"
+    [disabled]="recipeForm?.pristine || !recipeForm?.valid"
     type="button"
     (click)="save()"
     class="save-button md-fab-bottom-right">
