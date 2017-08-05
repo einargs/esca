@@ -10,7 +10,8 @@
     <md-error *ngIf="name.hasError('required')">Recipe name is required</md-error>
   </md-input-container>
 
-  <tag-input
+  <tag-input #tagInput
+    [fixAnimation]="tagInput"
     modelAsStrings="true"
     formControlName="tags"
     placeholder="Add tags"

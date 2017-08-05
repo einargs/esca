@@ -5,6 +5,8 @@ import { CommonModule }                     from "@angular/common";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { RouterModule }                     from "@angular/router";
 
+import { TagInputAnimationFixDirective }    from "../misc/tag-input-animation-fix.directive";
+
 import { RecipeDetailComponent }            from "./recipe-detail/recipe-detail.component";
 import { ConfirmNavDialogComponent }        from "./recipe-detail/confirm-nav-dialog.component";
 import { RecipeListComponent }              from "./recipe-list/recipe-list.component";
@@ -26,6 +28,7 @@ import { RecipesRoutingModule }             from "./recipes-routing.module";
     RecipesRoutingModule
   ],
   declarations: [
+    TagInputAnimationFixDirective,
     RecipeDetailComponent,
     RecipeListComponent,
     DeleteRecipeDialogComponent,
