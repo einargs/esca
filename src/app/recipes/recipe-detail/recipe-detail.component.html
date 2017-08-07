@@ -1,66 +1,69 @@
 <form
-  *ngIf="recipe"
-  #recipeForm="ngForm"
+  [formGroup]="recipeForm"
   class="recipe-form">
   <md-input-container class="recipe-title mat-h1">
     <input mdInput
-      #name="ngModel"
+      formControlName="name"
       required
-      [(ngModel)]="recipe.name" type="text"
-      placeholder="Name" name="name" />
+      type="text"
+      placeholder="Name" />
     <md-error *ngIf="name.hasError('required')">Recipe name is required</md-error>
   </md-input-container>
 
-  <tag-input
+  <tag-input #tagInput
+    [fixAnimation]="tagInput"
     modelAsStrings="true"
-    [(ngModel)]="recipe.tags"
+    formControlName="tags"
     placeholder="Add tags"
     secondaryPlaceholder="Add tags"
-    name="tags"
     class="recipe-tags"></tag-input>
 
   <div class="recipe-stats">
     <md-input-container class="recipe-time recipe-stat">
       <input mdInput
-        #time="ngModel"
-        [(ngModel)]="recipe.time"
+        formControlName="time"
         type="number" min="0"
-        placeholder="Time" name="time" />
+        placeholder="Time" />
     </md-input-container>
   </div>
 
-  <md-list class="recipe-ingredients">
+  <md-list
+    formArrayName="ingredients"
+    class="recipe-ingredients">
     <md-list-item
-      *ngFor="let ingredient of recipe.ingredients"
-      class="recipe-ingredient">
-      <span md-line
-        class="ingredient-name">{{ingredient}}</span>
+      *ngFor="let ingredient of ingredients.controls; let i = index"
+      class="ingredient-item">
+      <md-input-container md-line>
+        <input mdInput
+          [errorStateMatcher]="ingredientErrorMatcher"
+          [formControlName]="i" />
+      </md-input-container>
       <button md-icon-button
-        (click)="deleteIngredient(ingredient)"
+        (click)="deleteIngredient(i)"
         type="button"
         class="delete-ingredient">
         <md-icon class="delete-ingredient-icon">delete</md-icon>
       </button>
     </md-list-item>
     <md-list-item>
-      <md-input-container class="add-recipe-ingredient">
+      <md-input-container class="add-ingredient">
         <input mdInput #addIngredientInput
           (keyup.enter)="addIngredient(addIngredientInput.value); addIngredientInput.value = ''"
-          placeholder="Add Ingredient" name="addIngredient" type="text" />
+          placeholder="Add ingredient" name="addIngredient" type="text" />
       </md-input-container>
     </md-list-item>
   </md-list>
 
   <md-input-container class="recipe-instructions mat-body-1">
     <textarea mdInput mdTextareaAutosize mdAutosizeMinRows="4"
-      [(ngModel)]="recipe.instructions"
-      placeholder="Instructions" name="instructions"></textarea>
+      formControlName="instructions"
+      placeholder="Instructions"></textarea>
   </md-input-container>
 
   <button md-fab
-    [disabled]="!recipeForm?.valid"
-    (click)="save()"
+    [disabled]="recipeForm?.pristine || !recipeForm?.valid"
     type="button"
+    (click)="save()"
     class="save-button md-fab-bottom-right">
     <md-icon>save</md-icon>
   </button>

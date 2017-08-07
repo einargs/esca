@@ -1,8 +1,9 @@
 import { Observable }             from "rxjs/Observable";
+import { BehaviorSubject }        from "rxjs/BehaviorSubject";
 import "rxjs/add/observable/of";
 
-import { NgForm }                 from "@angular/forms";
-import { ActivatedRoute }         from "@angular/router";
+import { FormGroup }              from "@angular/forms";
+import { Router, ActivatedRoute } from "@angular/router";
 import { RouterTestingModule }    from "@angular/router/testing";
 import { By }                     from "@angular/platform-browser";
 import { DebugElement }           from "@angular/core";
@@ -23,14 +24,26 @@ import { mockRecipeService }      from "../../../../testing/mock-recipe-service"
 let component:      RecipeDetailComponent;
 let fixture:        ComponentFixture<RecipeDetailComponent>;
 let route:          ActivatedRoute;
+let router:         Router;
 let recipeService:  RecipeService;
 let page:           Page;
 
-let recipe = () => component.recipe;
+let ctrls = new Proxy(<any>{}, {
+  get(target, prop, reciever) {
+    return page.form.get(<string>prop).value;
+  },
+  set(target, prop, val, reciever) {
+    let control = page.form.get(<string>prop);
+    control.setValue(val);
+    control.markAsDirty();
+    control.updateValueAndValidity();
+    return true;
+  }
+});
 
 let genTestRecipe = () => ({
-  $key: "1111",
-  owner_id: "weee",
+  id: "1111",
+  ownerId: "weee",
   name: "test",
   tags: ["testing", "test"],
   time: 45,
@@ -47,16 +60,14 @@ describe("RecipeDetailComponent", () => {
         RouterTestingModule
       ],
       providers:    [
-        mockRecipeService(m => {
-          m.getRecipe
-            .and.returnValue(Observable.of(genTestRecipe()));
-        })
+        mockRecipeService()
       ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
+    //TestBed.get(ActivatedRoute)
     fixture   = TestBed.createComponent(RecipeDetailComponent);
     component = fixture.componentInstance;
     page      = new Page();
@@ -64,42 +75,42 @@ describe("RecipeDetailComponent", () => {
     recipeService = fixture.debugElement.injector.get(RecipeService);
     route         = fixture.debugElement.injector.get(ActivatedRoute);
 
-    page.update();
+    route.data = new BehaviorSubject({
+      recipe: Observable.of(genTestRecipe())
+    });
   });
 
   it("should display the recipe name (async)", async(async () => {
     await fixture.whenStable();
     page.update();
 
-    expect(recipe().name).toBe("test");
+    expect(ctrls.name).toBe("test");
     expect(page.title).toBe("test");
 
-    recipe().name = "New Test";
+    ctrls.name = "New Test";
     fixture.detectChanges();
 
     await fixture.whenStable();
     page.update();
 
-    expect(recipe().name).toBe("New Test");
+    expect(ctrls.name).toBe("New Test");
     expect(page.title).toBe("New Test");
   }));
-
-  //TODO:The current temporary tag UI isn't being tested
 
   it("should display the recipe duration (async)", async(async () => {
     await fixture.whenStable();
     page.update();
 
-    expect(recipe().time).toBe(45);
+    expect(ctrls.time).toBe(45);
     expect(page.time).toBe(45);
 
-    recipe().time = 30;
+    ctrls.time = 30;
     fixture.detectChanges();
 
     await fixture.whenStable();
     page.update();
 
-    expect(recipe().time).toBe(30);
+    expect(ctrls.time).toBe(30);
     expect(page.time).toBe(30);
   }));
 
@@ -107,16 +118,16 @@ describe("RecipeDetailComponent", () => {
     await fixture.whenStable();
     page.update();
 
-    expect(recipe().ingredients).toEqual(["time", "money"]);
+    expect(ctrls.ingredients).toEqual(["time", "money"]);
     expect(page.ingredients).toEqual(["time", "money"]);
 
-    recipe().ingredients = ["effort", "people"];
+    ctrls.ingredients = ["effort", "people"];
     fixture.detectChanges();
 
     await fixture.whenStable();
     page.update();
 
-    expect(recipe().ingredients).toEqual(["effort", "people"]);
+    expect(ctrls.ingredients).toEqual(["effort", "people"]);
     expect(page.ingredients).toEqual(["effort", "people"]);
   }));
 
@@ -124,49 +135,79 @@ describe("RecipeDetailComponent", () => {
     await fixture.whenStable();
     page.update();
 
-    expect(recipe().instructions).toEqual("Test things?");
+    expect(ctrls.instructions).toEqual("Test things?");
     expect(page.instructions).toEqual("Test things?");
 
-    recipe().instructions = "Play around with stuff.";
+    ctrls.instructions = "Play around with stuff.";
     fixture.detectChanges();
 
     await fixture.whenStable();
     page.update();
 
-    expect(recipe().instructions).toEqual("Play around with stuff.");
+    expect(ctrls.instructions).toEqual("Play around with stuff.");
     expect(page.instructions).toEqual("Play around with stuff.");
   }));
 
-  it("should save the recipe (async)", async(async () => {
-    await fixture.whenStable();
+  it("shouldn't save a pristine recipe", () => {
     page.update();
 
     page.saveButton.click();
 
-    expect(recipeService.saveRecipe).toHaveBeenCalled();
-  }));
+    expect(page.form.pristine).toBe(true);
+    expect(recipeService.saveRecipe).not.toHaveBeenCalled();
+  });
 
-  it("should handle validation (async)", async(async () => {
-    await fixture.whenStable();
+  it("should save a dirty and valid recipe", () => {
     page.update();
 
+    ctrls.name = "Also valid name";
+
+    page.update();
+
+    page.saveButton.click();
+
+    expect(page.form.dirty).toBe(true);
+    expect(page.form.valid).toBe(true);
+    expect(recipeService.saveRecipe).toHaveBeenCalled();
+  });
+
+  it("should disable saving when pristine", () => {
+    page.update();
+
+    expect(page.form.pristine).toBe(true);
+    expect(page.form.valid).toBe(true);
+    expect(page.saveButton.disabled).toBe(true);
+  });
+
+  it("should allow saving when dirty and valid", () => {
+    page.update();
+
+    ctrls.name = "other test name";
+
+    page.update();
+
+    expect(page.form.dirty).toBe(true);
     expect(page.form.valid).toBe(true);
     expect(page.saveButton.disabled).toBe(false);
+  });
 
-    recipe().name = "";
-
-    page.update();
-    await fixture.whenStable();
+  it("should disable saving when invalid", () => {
     page.update();
 
+    ctrls.name = "";
+
+    page.update();
+
+    expect(page.form.dirty).toBe(true);
     expect(page.form.valid).toBe(false);
     expect(page.saveButton.disabled).toBe(true);
-  }));
+  });
 });
 
 class Page {
+  titleInput:   HTMLInputElement;
   saveButton:   HTMLButtonElement;
-  form:         NgForm;
+  form:         FormGroup;
 
   title:        string;
   time:         number;
@@ -174,17 +215,15 @@ class Page {
   instructions: string;
 
   loadElements() {
+    this.form = component.recipeForm;
     let f = fixture.debugElement;
 
-    this.form         = f
-      .query(By.css("form"))
-      .references
-      .recipeForm;
 
-    this.nameInput    = f
+    this.titleInput   = f
       .query(By.css(".recipe-title input"))
-      .nativeElement
-      .value;
+      .nativeElement;
+
+    this.title = this.titleInput.value;
 
     this.time         = +f
       .query(By.css(".recipe-time input"))
@@ -192,8 +231,8 @@ class Page {
       .value;
 
     this.ingredients  = f
-      .queryAll(By.css(".ingredient-name"))
-      .map(el => el.nativeElement.textContent);
+      .queryAll(By.css(".ingredient-item input"))
+      .map(el => el.nativeElement.value);
 
     this.instructions = f
       .query(By.css(".recipe-instructions textarea"))

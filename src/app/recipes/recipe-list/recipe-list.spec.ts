@@ -26,8 +26,8 @@ let page:           Page;
 
 let genTestGists = () => [
   {
-    $key: "1111",
-    owner_id: "weee",
+    id: "1111",
+    ownerId: "weee",
     name: "test",
     tags: ["testing"],
     time: 45,
