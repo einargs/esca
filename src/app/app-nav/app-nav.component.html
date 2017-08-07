@@ -1,9 +1,11 @@
 <md-nav-list>
   <a md-list-item
+    (click)="emitCloseSidenav()"
     routerLink="/"
-    routerLinkActive="active">Home</a>
+    class="nav-item">Home</a>
   <a md-list-item
     *ngIf="userService.signedIn"
+    (click)="emitCloseSidenav()"
     routerLink="/recipe"
-    routerLinkActive="active">My Recipes</a>
+    class="nav-item">My Recipes</a>
 </md-nav-list>

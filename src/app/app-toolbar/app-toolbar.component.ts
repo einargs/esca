@@ -7,9 +7,11 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 })
 export class AppToolbarComponent {
   @Input() title: string;
-  @Output() menuToggle = new EventEmitter<void>();
+  @Output("toggleMenu") toggleMenuEmitter = new EventEmitter<void>();
+  @Input() menuOpen: boolean = false;
 
-  emitMenuToggle(): void {
-    this.menuToggle.emit();
+  toggleMenu(): void {
+    this.menuOpen = !this.menuOpen;
+    this.toggleMenuEmitter.emit();
   }
 }
