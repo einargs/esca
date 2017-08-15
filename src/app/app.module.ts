@@ -17,7 +17,7 @@ import { SignInLandingDialogComponent } from "./user/sign-in-landing-dialog.comp
 import { ImportsModule }                from './imports/imports.module';
 import { FireSetupModule }              from "./fire-setup.module";
 import { UserModule }                   from "./user/user.module";
-import { HomeModule }                   from "./home/home.module";
+//import { HomeModule }                   from "./home/home.module";
 import { AppRoutingModule }             from "./app-routing.module";
 import { UserService }                  from "./user/user.service";
 
@@ -28,7 +28,7 @@ import { UserService }                  from "./user/user.service";
     FireSetupModule,
     ImportsModule,
     UserModule,
-    HomeModule,
+    //HomeModule,
     AppRoutingModule
   ],
   declarations: [
