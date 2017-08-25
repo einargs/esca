@@ -1,28 +1,30 @@
-<tag-input #tagFilter
-  modelAsStrings="true"
-  [(ngModel)]="filter.hasTags"
-  (ngModelChange)="updateFilter()"
-  placeholder="Filter by tags"
-  secondaryPlaceholder="Filter by tags"
-  name="tag-filter"
-  class="tag-filter"></tag-input>
+<section class="list-container mat-elevation-z3">
+  <tag-input #tagFilter
+    modelAsStrings="true"
+    [(ngModel)]="filter.hasTags"
+    (ngModelChange)="updateFilter()"
+    placeholder="Filter by tags"
+    secondaryPlaceholder="Filter by tags"
+    name="tag-filter"
+    class="tag-filter"></tag-input>
 
-<md-nav-list class="list">
-  <md-list-item
-    *ngFor="let recipe of recipes | async"
-    class="recipe-item">
-    <a md-line
-      [routerLink]="['/recipe', recipe.id]">{{recipe.name}}</a>
-    <button md-icon-button
-      (click)="deleteRecipe(recipe)"
-      type="button"
-      class="delete-recipe">
-      <md-icon md-list-icon class="delete-recipe-icon">delete</md-icon>
-    </button>
-  </md-list-item>
-</md-nav-list>
-<button md-fab
-  (click)="newRecipe()"
-  class="new-recipe">
-  <md-icon>add</md-icon>
-</button>
+  <md-nav-list class="list">
+    <md-list-item
+      *ngFor="let recipe of recipes | async"
+      class="recipe-item">
+      <a md-line
+        [routerLink]="['/recipe', recipe.id]">{{recipe.name}}</a>
+      <button md-icon-button
+        (click)="deleteRecipe(recipe)"
+        type="button"
+        class="delete-recipe">
+        <md-icon md-list-icon class="delete-recipe-icon">delete</md-icon>
+      </button>
+    </md-list-item>
+  </md-nav-list>
+  <button md-fab
+    (click)="newRecipe()"
+    class="new-recipe">
+    <md-icon>add</md-icon>
+  </button>
+</section>

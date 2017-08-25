@@ -27,8 +27,6 @@ export class RecipeDetailComponent {
   // Aliases for form controls
   get name(): FormControl
   { return this.recipeForm.controls.name as FormControl; }
-  get time(): FormControl
-  { return this.recipeForm.controls.time as FormControl; }
   get tags(): FormControl
   { return this.recipeForm.controls.tags as FormControl; }
   get ingredients(): FormArray
@@ -58,7 +56,6 @@ export class RecipeDetailComponent {
   createForm(): void {
     this.recipeForm = this.fb.group({
       name: ["", Validators.required],
-      time: 0,
       tags: [[]],
       ingredients: this.fb.array([]),
       instructions: ""
@@ -92,7 +89,6 @@ export class RecipeDetailComponent {
   loadDataModel(recipe: Recipe): void {
     this.recipeForm.reset({
       name: recipe.name,
-      time: recipe.time,
       tags: recipe.tags,
       instructions: recipe.instructions
     });
