@@ -13,6 +13,7 @@
   flex-flow: row wrap
   flex-grow: 1
   margin: 15pt
+  padding: 10pt
 
 
 // Set an element to full width in the form flexbox
@@ -32,19 +33,19 @@
   +full-width
 
 /* Recipe stat field container is a full-width flex container
-.recipe-stats
-  order: 3
-  display: flex
-  flex-flow: row wrap
-  +full-width
+  .recipe-stats
+    order: 3
+    display: flex
+    flex-flow: row wrap
+    +full-width
 
 /* Recipe stat fields take up an equal amount of space in their container
-.recipe-stat
-  flex: 1 0
+  .recipe-stat
+    flex: 1 0
 
 /* Recipe ingredients list is a full-width container */
 .recipe-ingredients
-  order: 4
+  order: 3
   display: block
   +full-width
 
@@ -56,27 +57,12 @@
 
 /* Recipe instruction text field is a full-width block
 .recipe-instructions
-  order: 5
+  order: 4
   display: block
   +full-width
 
   textarea
     resize: none
-
-/* Breakpoints
-@media all and (min-width: 650px)
-  .recipe-ingredients
-    order: 3
-    flex: 2 0
-
-  .recipe-stats
-    order: 4
-    flex: 1 0
-    flex-flow: column nowrap
-
-  .recipe-stat
-    flex: 0 0
-
 
 /* Save button is an absolutely positioned FAB */
 //TODO:Figure out how to fix the bug with transform3d

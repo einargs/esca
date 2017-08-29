@@ -10,8 +10,6 @@ export interface RecipeFilter {
   nameIncludes?: string;
   hasTags?: string[];
   hasIngredients?: string[];
-  timeLessThan?: number;
-  timeMoreThan?: number;
 }
 
 // Collection of utility methods that ignore case
@@ -39,10 +37,6 @@ function filterArray(
   gists: RecipeGist[]
 ): RecipeGist[] {
   return gists.filter(gist => (
-    !filter.timeMoreThan || (+gist.time > filter.timeMoreThan)
-  ) && (
-    !filter.timeLessThan || (+gist.time < filter.timeLessThan)
-  ) && (
     !filter.nameIncludes || (IC.isSubstring(filter.nameIncludes, gist.name))
   ) && (
     !filter.hasTags || (gist.tags && IC.isSubset(filter.hasTags, gist.tags))

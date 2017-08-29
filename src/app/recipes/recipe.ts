@@ -1,8 +1,12 @@
+interface RecipeInfo {
+  [key: string]: string;
+}
+
 export interface Recipe {
   id: string;
   ownerId: string;
   name: string;
-  time: number;
+  info: RecipeInfo;
   tags: string[];
   ingredients: string[];
   instructions: string;

@@ -35,7 +35,7 @@ interface ServerRecipe {
   ownerId: string;
   name: string;
   tags: InvertedStringArray;
-  time: number;
+  info: {[key: string]: string};
   ingredients: InvertedStringArray;
   instructions: string;
 }
@@ -44,7 +44,7 @@ export function buildServerRecipe(recipe: Recipe): ServerRecipe {
   return {
     ownerId: recipe.ownerId,
     name: recipe.name,
-    time: recipe.time,
+    info: {...recipe.info},
     tags: recipe.tags ? toInverted(recipe.tags) : undefined,
     ingredients: recipe.ingredients ? toInverted(recipe.ingredients) : undefined,
     instructions: recipe.instructions
@@ -56,7 +56,7 @@ export function buildRecipe(serverRecipe: Keyed & ServerRecipe): Recipe {
     id: serverRecipe.$key,
     ownerId: serverRecipe.ownerId,
     name: serverRecipe.name,
-    time: serverRecipe.time,
+    info: {...serverRecipe.info},
     tags: serverRecipe.tags ? fromInverted(serverRecipe.tags) : [],
     ingredients: serverRecipe.ingredients ? fromInverted(serverRecipe.ingredients) : [],
     instructions: serverRecipe.instructions
@@ -69,7 +69,6 @@ interface ServerRecipeGist {
   ownerId: string;
   name: string;
   tags: InvertedStringArray;
-  time: number;
   ingredients: InvertedStringArray;
 }
 
@@ -77,7 +76,6 @@ export function buildServerGist(gist: RecipeGist): ServerRecipeGist {
   return {
     ownerId: gist.ownerId,
     name: gist.name,
-    time: gist.time,
     tags: gist.tags ? toInverted(gist.tags) : undefined,
     ingredients: gist.ingredients ? toInverted(gist.ingredients) : undefined
   };
@@ -88,7 +86,6 @@ export function buildGist(serverGist: Keyed & ServerRecipeGist): RecipeGist {
     id: serverGist.$key,
     ownerId: serverGist.ownerId,
     name: serverGist.name,
-    time: serverGist.time,
     tags: serverGist.tags ? fromInverted(serverGist.tags) : [],
     ingredients: serverGist.ingredients ? fromInverted(serverGist.ingredients) : []
   };

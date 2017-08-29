@@ -1,6 +1,6 @@
 <form
   [formGroup]="recipeForm"
-  class="recipe-form">
+  class="recipe-form mat-elevation-z3">
   <md-input-container class="recipe-title mat-h1">
     <input mdInput
       formControlName="name"
@@ -17,15 +17,6 @@
     placeholder="Add tags"
     secondaryPlaceholder="Add tags"
     class="recipe-tags"></tag-input>
-
-  <div class="recipe-stats">
-    <md-input-container class="recipe-time recipe-stat">
-      <input mdInput
-        formControlName="time"
-        type="number" min="0"
-        placeholder="Time" />
-    </md-input-container>
-  </div>
 
   <md-list
     formArrayName="ingredients"
