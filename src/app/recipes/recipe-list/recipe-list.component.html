@@ -1,8 +1,8 @@
 <section class="list-container mat-elevation-z3">
   <tag-input #tagFilter
     modelAsStrings="true"
-    [(ngModel)]="filter.hasTags"
-    (ngModelChange)="updateFilter()"
+    [(ngModel)]="filteredTags"
+    (ngModelChange)="updateFiltering()"
     placeholder="Filter by tags"
     secondaryPlaceholder="Filter by tags"
     name="tag-filter"

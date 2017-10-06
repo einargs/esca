@@ -1,85 +1,118 @@
 import {Observable }                    from "rxjs/Observable";
+import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/switchMap';
 
 import { Injectable }                   from "@angular/core";
-import { AngularFireDatabase }          from "angularfire2/database";
+import { AngularFirestore,
+  AngularFirestoreDocument,
+  AngularFirestoreCollection }          from "angularfire2/firestore";
 import { AngularFireAuth }              from 'angularfire2/auth';
-import * as firebase                    from 'firebase/app';
+import { firestore }                    from 'firebase/app';
 
 import { UserService }                  from "../user/user.service";
-import { Recipe }                       from "./recipe";
-import { RecipeGist, recipeGistUtil }   from "./recipe-gist";
+import { User }                         from "../user/user";
+import { Recipe, RecipeBase }           from "./recipe";
+import { RecipeFilter }                 from "./recipe-filter";
 
-import * as dbUtil                      from "./db-util";
+
+// The form of a recipe when stored in the firestore database
+interface DataRecipe {
+  id: string;
+  ownerId: string;
+  name: string;
+  tags: any; // Actually a map of strings to true booleans
+  ingredients: string[];
+  instructions: string;
+}
+
+// Build the serverside recipe format from a clientside recipe
+function buildDataFromRecipe(recipe: Recipe): DataRecipe {
+  let data = {...recipe, tags:{}};
+
+  for (let tag of recipe.tags)
+    data.tags[tag] = true;
+
+  return data;
+}
+
+// Build a clientside recipe from a serverside recipe
+function buildRecipeFromData(data: DataRecipe): Recipe {
+  return { ...data, tags: Object.keys(data.tags) };
+}
+
 
 @Injectable()
 export class RecipeService {
-  constructor(
-    private db: AngularFireDatabase,
-    private userService: UserService
-  ) {}
+  private recipeCollection: AngularFirestoreCollection<DataRecipe>;
 
-  getUserRecipeGists(userId: string): Observable<RecipeGist[]> {
-    return this.db.list(`/recipe-gists-by-user/${userId}`)
-      .map(gists => gists.map(dbUtil.buildGist));
+  constructor(
+    private afs: AngularFirestore,
+    private userService: UserService
+  ) {
+    this.recipeCollection = afs.collection<DataRecipe>("recipes");
   }
 
-  getCurrentUserRecipeGists(): Observable<RecipeGist[]> {
-    return this.userService.userIdSubject
-      .switchMap(id => id ? this.getUserRecipeGists(id) : []);
+  // Utility method
+  private getRecipeRef(id: string): AngularFirestoreDocument<DataRecipe> {
+    return this.recipeCollection.doc(id);
+  }
+
+  // Utility method
+  private getFilteredRecipeCollectionRef(filter: RecipeFilter): AngularFirestoreCollection<DataRecipe> {
+    return this.afs.collection<DataRecipe>("recipes", (ref: firestore.Query) => {
+      if (filter.tags) {
+        for (let tag of filter.tags)
+          ref = ref.where(`tags.${tag}`, "==", true);
+      }
+      if (filter.ownerId) {
+        ref = ref.where("ownerId", "==", filter.ownerId);
+      }
+
+      return ref;
+    });
+  }
+
+  // Accepts an observable that emits filters
+  // Returns an observable switchMap'd to give updated filters
+  getFilteredRecipes(filterObservable: Observable<RecipeFilter>): Observable<Recipe[]> {
+    return filterObservable
+      .switchMap(filter => this.getFilteredRecipeCollectionRef(filter).valueChanges())
+      .map(dataRecipes => dataRecipes.map(buildRecipeFromData));
   }
 
   getRecipe(id: string): Observable<Recipe> {
-    return this.db.object(`/recipe/${id}`)
-      .map(dbUtil.buildRecipe);
+    return this.getRecipeRef(id)
+      .valueChanges()
+      .map(buildRecipeFromData);
   }
 
   // Create a brand-new recipe
-  async newRecipe(): Promise<string> {
-    let uid = this.userService.userId;
+  async newRecipe(owner: User): Promise<Recipe> {
+    let recipe: Recipe = {
+      ownerId: owner.id,
+      id: this.afs.createId(),
+      name: "Untitled Recipe",
+      tags: [],
+      ingredients: [],
+      instructions: ""
+    };
 
-    if (!uid) throw Error("User not logged in");
+    await this.saveRecipe(recipe);
 
-    let key = this.db.list("/recipe").push({
-      ownerId: uid,
-      name: "New Recipe"
-    }).key;
-
-    this.db.object(`/recipe-gists-by-user/${uid}/${key}`).set({
-      ownerId: uid,
-      name: "New Recipe"
-    });
-
-    return key;
+    return recipe;
   }
 
   // Delete a recipe
   async deleteRecipe(recipe: Recipe): Promise<void> {
     if (!recipe) throw Error("Must pass recipe for deletion");
 
-    let { id, ownerId } = recipe;
-
-    let p1 = this.db.list("/recipe").remove(id);
-    let p2 = this.db.list(`/recipe-gists-by-user/${ownerId}`).remove(id);
-
-    await p1;
-    await p2;
+    await this.getRecipeRef(recipe.id).delete();
   }
 
   // Save a recipe
   async saveRecipe(recipe: Recipe): Promise<void> {
     if (!recipe) throw Error("Must pass recipe to be saved");
 
-    let { id, ownerId } = recipe;
-
-    let serverRecipe = dbUtil.buildServerRecipe(recipe);
-    let gist = recipeGistUtil.buildGist(recipe);
-    let serverGist = dbUtil.buildServerGist(gist);
-
-    let recUpdate = this.db.object(`/recipe/${id}`).update(serverRecipe);
-    let gistUpdate = this.db.object(`/recipe-gists-by-user/${ownerId}/${id}`).update(serverGist);
-
-    await recUpdate;
-    await gistUpdate;
+    await this.getRecipeRef(recipe.id).set(buildDataFromRecipe(recipe));
   }
 }
