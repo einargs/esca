@@ -18,7 +18,7 @@ import { UserService }                      from "../../user/user.service";
   styleUrls: [ "./recipe-list.component.sass" ]
 })
 export class RecipeListComponent {
-  filterSubject: BehaviorSubject<RecipeFilter> = new BehaviorSubject({});
+  filterSubject: BehaviorSubject<RecipeFilter>;
 
   recipes: Observable<Recipe[]>;
 
@@ -30,6 +30,7 @@ export class RecipeListComponent {
     private recipeService:  RecipeService,
     public dialog:    MdDialog
   ) {
+    this.filterSubject = new BehaviorSubject(this.buildFilter());
     this.recipes = this.recipeService.getFilteredRecipes(this.filterSubject);
   }
 
@@ -63,6 +64,7 @@ export class RecipeListComponent {
   // Build a new filter from information
   buildFilter(): RecipeFilter {
     return {
+      ownerId: this.userService.userId,
       tags: this.filteredTags
     };
   }
