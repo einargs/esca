@@ -7,8 +7,7 @@ import { Router }                           from '@angular/router';
 import { MdDialog }                         from "@angular/material";
 
 import { Recipe }                           from "../recipe";
-import { RecipeGist }                       from "../recipe-gist";
-import { RecipeFilter, filterUtil }         from "../recipe-filter";
+import { RecipeFilter }                     from "../recipe-filter";
 import { DeleteRecipeDialogComponent }      from "./delete-recipe-dialog.component";
 import { RecipeService }                    from "../recipe.service";
 import { UserService }                      from "../../user/user.service";
@@ -19,28 +18,31 @@ import { UserService }                      from "../../user/user.service";
   styleUrls: [ "./recipe-list.component.sass" ]
 })
 export class RecipeListComponent {
-  filter: RecipeFilter = {
-    hasTags: []
-  };
+  filterSubject: BehaviorSubject<RecipeFilter>;
 
-  filterSubject: BehaviorSubject<RecipeFilter> = new BehaviorSubject(this.filter);
+  recipes: Observable<Recipe[]>;
 
-  recipes: Observable<RecipeGist[]> = filterUtil.makeFilteredObservable(
-    this.filterSubject,
-    this.service.getCurrentUserRecipeGists()
-  );
+  filteredTags: string[] = [];
 
   constructor(
     private router:   Router,
-    private service:  RecipeService,
+    private userService: UserService,
+    private recipeService:  RecipeService,
     public dialog:    MdDialog
-  ) {}
+  ) {
+    this.filterSubject = new BehaviorSubject(this.buildFilter());
+    this.recipes = this.recipeService.getFilteredRecipes(this.filterSubject);
+  }
 
   // Create a new recipe and navigate to it
-  newRecipe(): Promise<void> {
-    return this.service.newRecipe()
-      .then(id => {
-        this.router.navigate(["/recipe", id]);
+  async newRecipe(): Promise<void> {
+    let user = await this.userService.getUser();
+
+    if (!user) throw Error("User must be signed in to make a new recipe.");
+
+    return this.recipeService.newRecipe(user)
+      .then(recipe => {
+        this.router.navigate(["/recipe", recipe.id]);
       });
   }
 
@@ -56,11 +58,25 @@ export class RecipeListComponent {
   async deleteRecipe(recipe: Recipe): Promise<void> {
     let confirmation = await this.openDeleteRecipeDialog(recipe.name);
 
-    if (confirmation) await this.service.deleteRecipe(recipe);
+    if (confirmation) await this.recipeService.deleteRecipe(recipe);
   }
 
-  //
-  updateFilter(): void {
-    this.filterSubject.next(this.filter);
+  // Build a new filter from information
+  buildFilter(): RecipeFilter {
+    return {
+      ownerId: this.userService.userId,
+      tags: this.filteredTags
+    };
+  }
+
+  // Emit a new filter from the filterSubject
+  emitFilterUpdate(filter: RecipeFilter): void {
+    console.log("New filter", filter);
+    this.filterSubject.next(filter);
+  }
+
+  // Build and emit a new filter
+  updateFiltering(): void {
+    this.emitFilterUpdate(this.buildFilter());
   }
 }

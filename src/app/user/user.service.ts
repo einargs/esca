@@ -63,6 +63,16 @@ export class UserService {
       .first().toPromise();
   }
 
+  // Get a promise that waits for auth to load
+  // then returns either the user if signed in
+  // or null if not signed in
+  async getUser(): Promise<User> {
+    await this.authLoaded();
+
+    return this.user;
+  }
+
+
   // A utility function for setting up the sign in dialogs
   private setupAuthDialog(component: any): Promise<any> {
     let dialog = this.dialog.open(component);

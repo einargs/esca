@@ -12,7 +12,6 @@ import {
 import { RecipesModule }          from "../recipes.module";
 import { RecipeListComponent }    from './recipe-list.component';
 import { RecipeService }          from "../recipe.service";
-import { RecipeGist }             from "../recipe-gist";
 
 import { ImportsModule }          from "../../imports/imports.module";
 
@@ -24,14 +23,15 @@ let fixture:        ComponentFixture<RecipeListComponent>;
 let recipeService:  RecipeService;
 let page:           Page;
 
-let genTestGists = () => [
+let genTestRecipes = () => [
   {
     id: "1111",
     ownerId: "weee",
     name: "test",
     tags: ["testing"],
     time: 45,
-    ingredients: ["time"]
+    ingredients: ["time"],
+    instructions: "fff"
   }
 ];
 
@@ -52,11 +52,11 @@ describe('RecipeListComponent', () => {
       providers:    [
         mockRecipeService(m => {
           m.newRecipe
-            .and.callFake(() => Promise.resolve("id"));
+            .and.callFake(() => Promise.resolve(genTestRecipes()[0]));
           m.deleteRecipe
             .and.callFake(() => Promise.resolve());
-          m.getCurrentUserRecipeGists
-            .and.callFake(() => Observable.of(genTestGists()));
+          m.getFilteredRecipes
+            .and.callFake(() => Observable.of(genTestRecipes()));
         })
       ]
     })
@@ -84,28 +84,6 @@ describe('RecipeListComponent', () => {
       expect(page.listItems.length).toBe(1);
       expect(page.listedRecipes).toContain("test");
     });
-  }));
-
-  it("should filter recipes by tags (fakeAsync)", fakeAsync(() => {
-    tick();
-    page.update();
-
-    expect(page.listItems.length).toBe(1);
-    expect(page.listedRecipes).toContain("test");
-
-    page.filterByTags(["chicken"]);
-    tick();
-    page.update();
-
-    expect(page.listItems.length).toBe(0);
-    expect(page.listedRecipes).not.toContain("test");
-
-    page.filterByTags(["testing"]);
-    tick();
-    page.update();
-
-    expect(page.listItems.length).toBe(1);
-    expect(page.listedRecipes).toContain("test");
   }));
 
   it("should tell the service to delete recipes (fakeAsync)", fakeAsync(() => {
@@ -169,10 +147,5 @@ class Page {
   update() {
     fixture.detectChanges();
     this.loadElements();
-  }
-
-  filterByTags(tags: string[]) {
-    component.filter = { hasTags: tags };
-    component.updateFilter();
   }
 }

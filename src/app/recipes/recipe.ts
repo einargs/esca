@@ -1,13 +1,11 @@
-interface RecipeInfo {
-  [key: string]: string;
-}
-
-export interface Recipe {
-  id: string;
-  ownerId: string;
+export interface RecipeBase {
   name: string;
-  info: RecipeInfo;
   tags: string[];
   ingredients: string[];
   instructions: string;
+}
+
+export interface Recipe extends RecipeBase {
+  id: string;
+  ownerId: string;
 }

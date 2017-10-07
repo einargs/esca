@@ -2,8 +2,7 @@ import { RecipeService } from "../src/app/recipes/recipe.service";
 
 export function mockRecipeService(configure?: (mockService: any) => void) {
   let mockService = jasmine.createSpyObj("recipeService", [
-    "getUserRecipeGists",
-    "getCurrentUserRecipeGists",
+    "getFilteredRecipes",
     "getRecipe",
     "newRecipe",
     "deleteRecipe",
