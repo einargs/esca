@@ -101,7 +101,7 @@ export class UserService {
         await this.signInWithEmailAndPasswordPopup();
         break;
       case "google":
-        await this.signInWithGooglePopup();
+        await this.signInWithGoogleRedirect();
         break;
     }
   }
@@ -130,8 +130,8 @@ export class UserService {
       });
   }
 
-  async signInWithGooglePopup(): Promise<void> {
-    await this.afAuth.auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
+  async signInWithGoogleRedirect(): Promise<void> {
+    await this.afAuth.auth.signInWithRedirect(new firebase.auth.GoogleAuthProvider());
   }
 
   async signOut(): Promise<void> {
