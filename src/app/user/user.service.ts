@@ -19,7 +19,6 @@ import { User }                         from "./user";
 
 @Injectable()
 export class UserService {
-  //TODO: Refactor this mess to use rxjs properly (however that is)
   userSubject: BehaviorSubject<User> = new BehaviorSubject(null);
   user: User;
   userIdSubject: BehaviorSubject<string> = new BehaviorSubject(null);
