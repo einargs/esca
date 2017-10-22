@@ -6,8 +6,8 @@
 
   <md-sidenav-container class="sidenav-container">
     <md-sidenav #sidenav
-      (open-start)="sidenavOpen = true"
-      (close-start)="sidenavOpen = false"
+      (open)="sidenavOpen = true"
+      (close)="sidenavOpen = false"
       mode="over"
       class="mat-elevation-z6">
       <app-nav (closeSidenav)="sidenav.close()"></app-nav>
