@@ -4,7 +4,7 @@ import 'rxjs/add/operator/toPromise';
 
 import { Component }                        from '@angular/core';
 import { Router }                           from '@angular/router';
-import { MdDialog }                         from "@angular/material";
+import { MatDialog }                         from "@angular/material";
 
 import { Recipe }                           from "../recipe";
 import { RecipeFilter }                     from "../recipe-filter";
@@ -28,7 +28,7 @@ export class RecipeListComponent {
     private router:   Router,
     private userService: UserService,
     private recipeService:  RecipeService,
-    public dialog:    MdDialog
+    public dialog:    MatDialog
   ) {
     this.filterSubject = new BehaviorSubject(this.buildFilter());
     this.recipes = this.recipeService.getFilteredRecipes(this.filterSubject);

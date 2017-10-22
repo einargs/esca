@@ -1,14 +1,14 @@
 <form
   [formGroup]="recipeForm"
   class="recipe-form mat-elevation-z3">
-  <md-input-container class="recipe-title mat-h1">
-    <input mdInput
+  <mat-form-field class="recipe-title mat-h1">
+    <input matInput
       formControlName="name"
       required
       type="text"
       placeholder="Name" />
-    <md-error *ngIf="name.hasError('required')">Recipe name is required</md-error>
-  </md-input-container>
+    <mat-error *ngIf="name.hasError('required')">Recipe name is required</mat-error>
+  </mat-form-field>
 
   <tag-input #tagInput
     [fixAnimation]="tagInput"
@@ -18,44 +18,44 @@
     secondaryPlaceholder="Add tags"
     class="recipe-tags"></tag-input>
 
-  <md-list
+  <mat-list
     formArrayName="ingredients"
     class="recipe-ingredients">
-    <md-list-item
+    <mat-list-item
       *ngFor="let ingredient of ingredients.controls; let i = index"
       class="ingredient-item">
-      <md-input-container md-line>
-        <input mdInput
+      <mat-form-field matLine>
+        <input matInput
           [errorStateMatcher]="ingredientErrorMatcher"
           [formControlName]="i" />
-      </md-input-container>
-      <button md-icon-button
+      </mat-form-field>
+      <button mat-icon-button
         (click)="deleteIngredient(i)"
         type="button"
         class="delete-ingredient">
-        <md-icon md-list-icon class="delete-ingredient-icon">delete</md-icon>
+        <mat-icon mat-list-icon class="delete-ingredient-icon">delete</mat-icon>
       </button>
-    </md-list-item>
-    <md-list-item>
-      <md-input-container class="add-ingredient">
-        <input mdInput #addIngredientInput
+    </mat-list-item>
+    <mat-list-item>
+      <mat-form-field class="add-ingredient">
+        <input matInput #addIngredientInput
           (keyup.enter)="addIngredient(addIngredientInput.value); addIngredientInput.value = ''"
           placeholder="Add ingredient" name="addIngredient" type="text" />
-      </md-input-container>
-    </md-list-item>
-  </md-list>
+      </mat-form-field>
+    </mat-list-item>
+  </mat-list>
 
-  <md-input-container class="recipe-instructions mat-body-1">
-    <textarea mdInput mdTextareaAutosize mdAutosizeMinRows="4"
+  <mat-form-field class="recipe-instructions mat-body-1">
+    <textarea matInput matTextareaAutosize matAutosizeMinRows="4"
       formControlName="instructions"
       placeholder="Instructions"></textarea>
-  </md-input-container>
+  </mat-form-field>
 
-  <button md-fab
+  <button mat-fab
     [disabled]="recipeForm?.pristine || !recipeForm?.valid"
     type="button"
     (click)="save()"
-    class="save-button md-fab-bottom-right">
-    <md-icon>save</md-icon>
+    class="save-button mat-fab-bottom-right">
+    <mat-icon>save</mat-icon>
   </button>
 </form>

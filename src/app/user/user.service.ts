@@ -8,7 +8,7 @@ import 'rxjs/add/operator/first';
 import 'rxjs/add/operator/toPromise';
 
 import { Injectable }                   from '@angular/core';
-import { MdDialog }                     from "@angular/material";
+import { MatDialog }                     from "@angular/material";
 import { AngularFireAuth }              from "angularfire2/auth";
 import * as firebase                    from "firebase/app";
 
@@ -30,7 +30,7 @@ export class UserService {
   isAuthLoaded = false;
 
   constructor(
-    private dialog: MdDialog,
+    private dialog: MatDialog,
     private afAuth: AngularFireAuth
   ) {
     // Get a promise for authentication being loaded

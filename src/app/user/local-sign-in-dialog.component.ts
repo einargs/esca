@@ -1,28 +1,28 @@
 import { Component }    from "@angular/core";
-import { MdDialogRef }  from "@angular/material";
+import { MatDialogRef }  from "@angular/material";
 
 @Component({
   selector: "local-sign-in-dialog",
   template: `
-    <h2 md-dialog-title class="mat-h2">Sign In</h2>
-    <md-dialog-content class="mat-body-1">
-      <md-input-container class="field">
-        <input mdInput #email
+    <h2 matDialogTitle class="mat-h2">Sign In</h2>
+    <mat-dialog-content class="mat-body-1">
+      <mat-form-field class="field">
+        <input matInput #email
           type="email" placeholder="email"
           name="email" />
-      </md-input-container>
-      <md-input-container class="field">
-        <input mdInput #password
+      </mat-form-field>
+      <mat-form-field class="field">
+        <input matInput #password
           type="password" placeholder="password"
           name="password" />
-      </md-input-container>
-    </md-dialog-content>
-    <md-dialog-actions class="actions">
-      <button md-button
-        [md-dialog-close]="{email:email.value, password:password.value}">Sign In</button>
-      <button md-button
-        [md-dialog-close]="false">Cancel</button>
-    </md-dialog-actions>
+      </mat-form-field>
+    </mat-dialog-content>
+    <mat-dialog-actions class="actions">
+      <button mat-button
+        [matDialogClose]="{email:email.value, password:password.value}">Sign In</button>
+      <button mat-button
+        [matDialogClose]="false">Cancel</button>
+    </mat-dialog-actions>
     `,
   styles: [`
     .field { display: block }
@@ -31,6 +31,6 @@ import { MdDialogRef }  from "@angular/material";
 })
 export class LocalSignInDialogComponent {
   constructor(
-    public dialogRef: MdDialogRef<LocalSignInDialogComponent>
+    public dialogRef: MatDialogRef<LocalSignInDialogComponent>
   ) {}
 }

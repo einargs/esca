@@ -1,16 +1,16 @@
-<md-toolbar class="toolbar mat-elevation-z6" color="primary">
-  <button md-icon-button
+<mat-toolbar class="toolbar mat-elevation-z6" color="primary">
+  <button mat-icon-button
     [ngSwitch]="menuOpen"
     (click)="toggleMenu()"
     class="menu-toggle">
-    <md-icon
+    <mat-icon
       *ngSwitchCase="true"
-      class="menu-icon">arrow_back</md-icon>
-    <md-icon
+      class="menu-icon">arrow_back</mat-icon>
+    <mat-icon
       *ngSwitchCase="false"
-      class="menu-icon">menu</md-icon>
+      class="menu-icon">menu</mat-icon>
   </button>
   <a routerLink="/" class="item">{{title}}</a>
   <span class="fill-space"></span>
   <user-ctrl></user-ctrl>
-</md-toolbar>
+</mat-toolbar>

@@ -1,7 +1,7 @@
 import 'rxjs/add/operator/toPromise';
 
 import { Injectable }                 from "@angular/core";
-import { MdDialog }                   from "@angular/material";
+import { MatDialog }                   from "@angular/material";
 import {
   CanDeactivate,
   ActivatedRouteSnapshot,
@@ -14,7 +14,7 @@ import { ConfirmNavDialogComponent }  from "./confirm-nav-dialog.component";
 @Injectable()
 export class RecipeSavedGuard implements CanDeactivate<RecipeDetailComponent> {
   constructor(
-    private dialog: MdDialog
+    private dialog: MatDialog
   ) {}
 
   async prompt(savable: boolean): Promise<string> {
