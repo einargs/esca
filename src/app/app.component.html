@@ -4,15 +4,15 @@
     (toggleMenu)="sidenav.toggle()"
     [title]="title"></app-toolbar>
 
-  <md-sidenav-container class="sidenav-container">
-    <md-sidenav #sidenav
+  <mat-sidenav-container class="sidenav-container">
+    <mat-sidenav #sidenav
       (open)="sidenavOpen = true"
       (close)="sidenavOpen = false"
       mode="over"
       class="mat-elevation-z6">
       <app-nav (closeSidenav)="sidenav.close()"></app-nav>
-    </md-sidenav>
+    </mat-sidenav>
 
     <router-outlet></router-outlet>
-  </md-sidenav-container>
+  </mat-sidenav-container>
 </section>

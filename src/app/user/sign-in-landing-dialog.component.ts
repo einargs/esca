@@ -1,21 +1,21 @@
 import { Component }   from "@angular/core";
-import { MdDialogRef } from "@angular/material";
+import { MatDialogRef } from "@angular/material";
 
 @Component({
   selector: "sign-in-landing-dialog",
   template: `
-    <h2 md-dialog-title class="mat-h2">Sign In</h2>
-    <md-dialog-content class="method-container">
-      <button md-button
-        [md-dialog-close]="'google'"
+    <h2 matDialogTitle class="mat-h2">Sign In</h2>
+    <mat-dialog-content class="method-container">
+      <button mat-button
+        [matDialogClose]="'google'"
         class="method">With Google</button>
-      <button md-button
-        [md-dialog-close]="'email'"
+      <button mat-button
+        [matDialogClose]="'email'"
         class="method">With Email</button>
-      <button md-button
-        [md-dialog-close]="'sign-up'"
+      <button mat-button
+        [matDialogClose]="'sign-up'"
         class="method">Sign Up</button>
-    </md-dialog-content>
+    </mat-dialog-content>
     `,
   styles: [`
     .method {
@@ -27,6 +27,6 @@ import { MdDialogRef } from "@angular/material";
 })
 export class SignInLandingDialogComponent {
   constructor(
-    public dialogRef: MdDialogRef<SignInLandingDialogComponent>
+    public dialogRef: MatDialogRef<SignInLandingDialogComponent>
   ) {}
 }

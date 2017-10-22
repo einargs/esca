@@ -8,23 +8,23 @@
     name="tag-filter"
     class="tag-filter"></tag-input>
 
-  <md-nav-list class="list">
-    <md-list-item
+  <mat-nav-list class="list">
+    <mat-list-item
       *ngFor="let recipe of recipes | async"
       class="recipe-item">
-      <a md-line
+      <a matLine
         [routerLink]="['/recipe', recipe.id]">{{recipe.name}}</a>
-      <button md-icon-button
+      <button mat-icon-button
         (click)="deleteRecipe(recipe)"
         type="button"
         class="delete-recipe">
-        <md-icon md-list-icon class="delete-recipe-icon">delete</md-icon>
+        <mat-icon mat-list-icon class="delete-recipe-icon">delete</mat-icon>
       </button>
-    </md-list-item>
-  </md-nav-list>
-  <button md-fab
+    </mat-list-item>
+  </mat-nav-list>
+  <button mat-fab
     (click)="newRecipe()"
     class="new-recipe">
-    <md-icon>add</md-icon>
+    <mat-icon>add</mat-icon>
   </button>
 </section>

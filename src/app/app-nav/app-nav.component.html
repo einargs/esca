@@ -1,11 +1,11 @@
-<md-nav-list>
-  <a md-list-item
+<mat-nav-list>
+  <a mat-list-item
     (click)="emitCloseSidenav()"
     routerLink="/about"
     class="nav-item">About</a>
-  <a md-list-item
+  <a mat-list-item
     *ngIf="userService.signedIn"
     (click)="emitCloseSidenav()"
     routerLink="/recipe"
     class="nav-item">My Recipes</a>
-</md-nav-list>
+</mat-nav-list>
