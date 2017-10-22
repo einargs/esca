@@ -9,7 +9,8 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "deploy": "ng build --prod -bh \"https://einargs.github.io/esca/\" && ngh"
+    "build-prod": "ng build --target=production --aot --build-optimizer --vendor-chunk",
+    "deploy": "npm run build-prod && sudo firebase deploy"
   },
   "private": true,
   "dependencies": {
