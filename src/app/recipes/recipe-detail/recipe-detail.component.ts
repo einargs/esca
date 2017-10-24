@@ -11,9 +11,20 @@ import {
   FormControl,
   Validators
 }                                           from "@angular/forms";
+import { ErrorStateMatcher }                from "@angular/material";
 
 import { Recipe }                           from "../recipe";
 import { RecipeService }                    from "../recipe.service";
+
+class IngredientErrorMatcher implements ErrorStateMatcher {
+  isErrorState(
+    control: FormControl,
+    form: FormGroupDirective
+  ): boolean {
+    const isSubmitted = form && form.submitted;
+    return Boolean(control && control.invalid && (control.touched || isSubmitted));
+  }
+}
 
 @Component({
   selector: "recipe-detail",
@@ -23,6 +34,7 @@ import { RecipeService }                    from "../recipe.service";
 export class RecipeDetailComponent {
   recipeForm: FormGroup;
   recipeData: Recipe;
+  ingredientErrorMatcher = new IngredientErrorMatcher();
 
   // Aliases for form controls
   get name(): FormControl
@@ -61,14 +73,6 @@ export class RecipeDetailComponent {
       instructions: ""
     });
   }
-
-  ingredientErrorMatcher(
-    control: FormControl,
-    form: FormGroupDirective
-  ) {
-  const isSubmitted = form && form.submitted;
-  return !!(control && control.invalid && (control.touched || isSubmitted));
-}
 
   deleteIngredient(index: number): void {
     this.ingredients.removeAt(index);
