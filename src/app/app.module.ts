@@ -3,6 +3,7 @@ import "hammerjs";
 import { NgModule }                     from '@angular/core';
 import { BrowserModule }                from '@angular/platform-browser';
 import { FormsModule }                  from "@angular/forms";
+import { ServiceWorkerModule }          from "@angular/service-worker";
 
 import { AppComponent }                 from './app.component';
 import { AppToolbarComponent }          from './app-toolbar/app-toolbar.component';
@@ -17,9 +18,9 @@ import { SignInLandingDialogComponent } from "./user/sign-in-landing-dialog.comp
 import { ImportsModule }                from './imports/imports.module';
 import { FireSetupModule }              from "./fire-setup.module";
 import { UserModule }                   from "./user/user.module";
-//import { HomeModule }                   from "./home/home.module";
 import { AppRoutingModule }             from "./app-routing.module";
 import { UserService }                  from "./user/user.service";
+import { environment }                  from "../environments/environment";
 
 @NgModule({
   imports:      [
@@ -28,7 +29,7 @@ import { UserService }                  from "./user/user.service";
     FireSetupModule,
     ImportsModule,
     UserModule,
-    //HomeModule,
+    ServiceWorkerModule.register("/ngsw-worker.js", {enabled: environment.production}),
     AppRoutingModule
   ],
   declarations: [
