@@ -1,0 +1,6 @@
+<section class="master-container">
+  <shopping-list-detail
+    *ngFor="let id of listIds | async"
+    [listId]="id"
+    class="list-detail"></shopping-list-detail>
+</section>
