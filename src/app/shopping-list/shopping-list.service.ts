@@ -26,4 +26,17 @@ export class ShoppingListService {
       "id4"
     ]);
   }
+
+  updateListName(listId: string, name: string): void {
+    console.log(`[placeholder] update list id ${listId} name to ${name}`);
+  }
+
+  deleteList(listId: string): void {
+    console.log("[placeholder] delete list id", listId);
+  }
+
+  newList(): Promise<string> {
+    console.log("[placeholder] make new list");
+    return Promise.resolve("[placeholder] new list id");
+  }
 }

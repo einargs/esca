@@ -1,8 +1,12 @@
-<mat-card>
-  <mat-card-title>{{(listObservable | async)?.name}}</mat-card-title>
-  <mat-card-content>
-    <mat-list>
-      <mat-list-item *ngFor="let item of (listObservable | async)?.items">{{item}}</mat-list-item>
-    </mat-list>
-  </mat-card-content>
-</mat-card>
+<form [formGroup]="listForm">
+  <mat-card>
+    <mat-card-title>
+      <input formControlName="name"/>
+    </mat-card-title>
+    <mat-card-content>
+      <mat-list>
+        <mat-list-item *ngFor="let item of (listObservable | async)?.items">{{item}}</mat-list-item>
+      </mat-list>
+    </mat-card-content>
+  </mat-card>
+</form>
