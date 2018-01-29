@@ -19,4 +19,8 @@ export class ShoppingListMasterComponent implements OnInit {
     this.listIds = this.listService.getIdsOfViewableLists();
   }
 
+  newList() {
+    this.listService.newList();
+  }
+
 }

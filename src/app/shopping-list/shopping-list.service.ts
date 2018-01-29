@@ -14,7 +14,10 @@ export class ShoppingListService {
   getList(id: string): Observable<ShoppingList> {
     return Observable.of({
       name: "test",
-      items: ["t1","t2"]
+      items: [
+        { name:"t1", checked: false },
+        { name:"t2", checked: true }
+      ]
     });
   }
 
@@ -27,8 +30,8 @@ export class ShoppingListService {
     ]);
   }
 
-  updateListName(listId: string, name: string): void {
-    console.log(`[placeholder] update list id ${listId} name to ${name}`);
+  updateList(listId: string, list: ShoppingList): void {
+    console.log(`[placeholder] update list id ${listId} to`, list);
   }
 
   deleteList(listId: string): void {

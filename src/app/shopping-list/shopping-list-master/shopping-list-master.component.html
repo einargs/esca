@@ -3,4 +3,9 @@
     *ngFor="let id of listIds | async"
     [listId]="id"
     class="list-detail"></shopping-list-detail>
+  <button mat-fab
+    (click)="newList()"
+    class="new-list">
+    <mat-icon>add</mat-icon>
+  </button>
 </section>
