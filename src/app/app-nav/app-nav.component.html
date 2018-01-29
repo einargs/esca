@@ -8,4 +8,9 @@
     (click)="emitCloseSidenav()"
     routerLink="/recipe"
     class="nav-item">My Recipes</a>
+  <a mat-list-item
+    *ngIf="userService.signedIn"
+    (click)="emitCloseSidenav()"
+    routerLink="/list"
+    class="nav-item">My Lists</a>
 </mat-nav-list>

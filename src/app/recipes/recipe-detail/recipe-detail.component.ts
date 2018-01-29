@@ -84,6 +84,7 @@ export class RecipeDetailComponent {
     this.ingredients.markAsDirty();
   }
 
+  // Necessary because of the shitty way updates are handled
   loadIngredients(ingredients: string[]): void {
     let ingControls = ingredients.map(ing => this.fb.control(ing));
     let ingArray = this.fb.array(ingControls);

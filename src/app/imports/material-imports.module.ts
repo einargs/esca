@@ -8,31 +8,31 @@ import {
   MatButtonModule,
   MatButtonToggleModule,
   MatDialogModule,
-  MatChipsModule
+  MatChipsModule,
+  MatCardModule,
+  MatCheckboxModule
 } from "@angular/material";
+
+const matImports = [
+  MatToolbarModule,
+  MatIconModule,
+  MatListModule,
+  MatInputModule,
+  MatSidenavModule,
+  MatButtonModule,
+  MatButtonToggleModule,
+  MatDialogModule,
+  MatChipsModule,
+  MatCardModule,
+  MatCheckboxModule
+];
 
 @NgModule({
   imports: [
-    MatToolbarModule,
-    MatIconModule,
-    MatListModule,
-    MatInputModule,
-    MatSidenavModule,
-    MatButtonModule,
-    MatButtonToggleModule,
-    MatDialogModule,
-    MatChipsModule
+    ...matImports
   ],
   exports: [
-    MatToolbarModule,
-    MatIconModule,
-    MatListModule,
-    MatInputModule,
-    MatSidenavModule,
-    MatButtonModule,
-    MatButtonToggleModule,
-    MatDialogModule,
-    MatChipsModule
+    ...matImports
   ]
 })
 export class MaterialImportsModule {}

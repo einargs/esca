@@ -7,6 +7,7 @@ const routes: Routes = [
   { path: "recipe", loadChildren: "app/recipes/recipes.module#RecipesModule" },
   { path: "", redirectTo: "recipe", pathMatch: "full" },
   { path: "about", loadChildren: "app/about/about.module#AboutModule" },
+  { path: "list", loadChildren: "app/shopping-list/shopping-list.module#ShoppingListModule" },
   { path: "**", component: NotFoundComponent }
 ];
 
