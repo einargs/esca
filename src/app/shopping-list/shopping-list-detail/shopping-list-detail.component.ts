@@ -30,7 +30,7 @@ export class ShoppingListDetailComponent implements OnInit, OnDestroy {
   /* per: https://stackoverflow.com/questions/38008334/ */
   private ngUnsubscribe = new Subject();
 
-  private listForm: FormGroup;
+  listForm: FormGroup;
   get name(): FormControl {
     return this.listForm.controls.name as FormControl;
   }
