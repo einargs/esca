@@ -1,45 +1,62 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore } from "angularfire2/firestore";
+import {
+  AngularFirestore, AngularFirestoreCollection, AngularFirestoreDocument
+} from "angularfire2/firestore";
+import { firestore } from "firebase/app";
 import { Observable } from "rxjs/Observable";
 
 import { ShoppingList } from "./shopping-list";
 
 @Injectable()
 export class ShoppingListService {
+  private listCollection: AngularFirestoreCollection<ShoppingList>;
 
   constructor(
     private afs: AngularFirestore
-  ) { }
-
-  getList(id: string): Observable<ShoppingList> {
-    return Observable.of({
-      name: "test",
-      items: [
-        { name:"t1", checked: false },
-        { name:"t2", checked: true }
-      ]
-    });
+  ) {
+    this.listCollection = afs.collection<ShoppingList>("lists");
   }
 
-  getIdsOfViewableLists(/*user: User*/): Observable<string[]> {
-    return Observable.of([
-      "id1",
-      "id2",
-      "id3",
-      "id4"
-    ]);
+  private getListRef(id: string): AngularFirestoreDocument<ShoppingList> {
+    return this.listCollection.doc(id);
+  }
+
+  getList(id: string): Observable<ShoppingList> {
+    return this.getListRef(id)
+      .valueChanges();
+  }
+
+  private getUserViewableCollectionRef(
+    userId: string
+  ): AngularFirestoreCollection<ShoppingList> {
+    return this.afs.collection<ShoppingList>("lists",
+      (ref: firestore.Query) => ref.where("meta.ownerId", "==", userId)
+    );
+  }
+
+  getIdsOfViewableLists(userId: string): Observable<string[]> {
+    return this.getUserViewableCollectionRef(userId)
+      .snapshotChanges()
+      .map(listChanges => listChanges.map(
+        listChange => listChange.payload.doc.id
+      ));
   }
 
   updateList(listId: string, list: ShoppingList): void {
-    console.log(`[placeholder] update list id ${listId} to`, list);
+    this.getListRef(listId).update(list);
   }
 
   deleteList(listId: string): void {
-    console.log("[placeholder] delete list id", listId);
+    this.getListRef(listId).delete();
   }
 
-  newList(): Promise<string> {
-    console.log("[placeholder] make new list");
-    return Promise.resolve("[placeholder] new list id");
+  newList(userId: string): void {
+    this.listCollection.add({
+      name: "",
+      meta: {
+        ownerId: userId
+      },
+      items: []
+    });
   }
 }
