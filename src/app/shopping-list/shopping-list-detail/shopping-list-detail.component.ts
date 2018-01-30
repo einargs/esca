@@ -45,6 +45,13 @@ export class ShoppingListDetailComponent implements OnInit, OnDestroy {
     this.listForm = this.createListForm();
   }
 
+  private createItemGroup(dataModel) {
+    return this.fb.group({
+      name: [dataModel.name, { updateOn:"blur" }],
+      checked: dataModel.checked
+    });
+  }
+
   deleteThisList() {
     this.listService.deleteList(this.listId);
   }
@@ -54,8 +61,8 @@ export class ShoppingListDetailComponent implements OnInit, OnDestroy {
   }
 
   addItemField(): void {
-    this.items.push(this.fb.group({
-      name:"",
+    this.items.push(this.createItemGroup({
+      name: "",
       checked: false
     }));
   }
@@ -74,10 +81,15 @@ export class ShoppingListDetailComponent implements OnInit, OnDestroy {
     });
     // Because the items array is a form control
     this.listForm.setControl("items", this.fb.array(
-      list.items.map(item => this.fb.group(item))
+      list.items.map(item => this.createItemGroup(item))
     ));
   }
 
+  //TODO: There seem to be optimization possibilities that involve
+  // updating only 1 field at a time. As things are, everytime the
+  // server updates (which is frequently) the item controls, which
+  // are in a `FormArray`, are re-created. This causes the user to
+  // lose focus on an item field (hence the updateOn="blur" hack).
   setupDataIn() {
     this.listObservable = this.listService.getList(this.listId);
     this.listObservable
@@ -114,7 +126,7 @@ export class ShoppingListDetailComponent implements OnInit, OnDestroy {
 
   // Update the server
   updateExternal(list: ShoppingList) {
-    console.log("[placeholder][detail] update list to", list);
+    console.log("[debug][detail] update list to", list);
     this.listService.updateList(this.listId, list);
   }
 }
