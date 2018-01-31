@@ -10,7 +10,8 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "build-prod": "ng build --prod --aot --build-optimizer",
-    "deploy": "npm run build-prod && sudo firebase deploy"
+    "deploy": "npm run build-prod && sudo firebase deploy",
+    "clean-dist": "rm -rf ./dist"
   },
   "private": true,
   "dependencies": {
