@@ -4,8 +4,14 @@ A simple project using angularjs, angular material, and angularfire2 to build a 
 ## License
 This project is licensed under the MIT license, a full copy of which can be found in `LICENSE.md`.
 
+## Documentation
+Documentation can be auto-generated using the [compodoc](https://compodoc.github.io/website) tool.
+
+## Deploy
+This project can be deployed using the `firebase-tools` package (which needs to be installed and set up seperately) by running `sudo npm run deploy`. It is occasionally worthwhile to run `sudo npm run clean-dist` after such an operation. The `deploy` script will run `npm run build-prod` before deploying the results via `sudo firebase deploy`.
+
 ## Angular CLI
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.2.0.
+This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.2.0. The currently used Angular CLI version can be found within `package.json`.
 
 ### Development server
 
@@ -17,7 +23,7 @@ Run `ng generate component component-name` to generate a new component. You can 
 
 ### Build
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `-prod` flag for a production build.
+Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `npm run build-prod` script to create a production build.
 
 ### Running unit tests
 
