@@ -44,3 +44,6 @@ Thumbs.db
 # Compiled files
 /src/**/*.js
 /src/**/*.map
+
+# Compodoc-generated documentation
+documentation
