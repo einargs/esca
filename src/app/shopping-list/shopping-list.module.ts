@@ -22,8 +22,7 @@ import { ShoppingListRoutingModule } from "./shopping-list-routing.module";
     ShoppingListDetailComponent
   ],
   providers: [
-    ShoppingListService,
-    UserService
+    ShoppingListService
   ]
 })
 export class ShoppingListModule { }

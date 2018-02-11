@@ -59,7 +59,7 @@ export class RecipeService {
 
   // Utility method
   private getFilteredRecipeCollectionRef(filter: RecipeFilter): AngularFirestoreCollection<DataRecipe> {
-    return this.afs.collection<DataRecipe>("recipes", (ref: firestore.Query) => {
+    return this.afs.collection<DataRecipe>("recipes", (ref: any) => {
       if (filter.tags) {
         for (let tag of filter.tags)
           ref = ref.where(`tags.${tag}`, "==", true);

@@ -4,6 +4,7 @@ import { NgModule }                     from '@angular/core';
 import { BrowserModule }                from '@angular/platform-browser';
 import { FormsModule }                  from "@angular/forms";
 import { ServiceWorkerModule }          from "@angular/service-worker";
+import { NgxElectronModule }            from "ngx-electron";
 
 import { AppComponent }                 from './app.component';
 import { AppToolbarComponent }          from './app-toolbar/app-toolbar.component';
@@ -29,7 +30,10 @@ import { environment }                  from "../environments/environment";
     FireSetupModule,
     ImportsModule,
     UserModule,
-    ServiceWorkerModule.register("/ngsw-worker.js", {enabled: environment.production}),
+    ...(environment.platform === "electron" ? [NgxElectronModule] : []),
+    ServiceWorkerModule.register("/ngsw-worker.js", {
+      enabled: environment.production && (environment.platform == "web")
+    }),
     AppRoutingModule
   ],
   declarations: [
@@ -38,9 +42,6 @@ import { environment }                  from "../environments/environment";
     AppToolbarComponent,
     AppNavComponent,
     UserCtrlComponent
-  ],
-  providers: [
-    UserService
   ],
   bootstrap:    [ AppComponent ]
 })

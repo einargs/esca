@@ -39,7 +39,6 @@ import { RecipesRoutingModule }             from "./recipes-routing.module";
     ConfirmNavDialogComponent
   ],
   providers: [
-    UserService,
     RecipeService
   ]
 })

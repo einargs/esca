@@ -1,6 +1,6 @@
 export const environment = {
   production: true,
-  platform: "web",
+  platform: "electron",
   firebase: {
     apiKey: "AIzaSyAPZaVleHfao63pAhFsiZoyWa_ljVmLcCg",
     authDomain: "esca-d7edb.firebaseapp.com",

@@ -16,6 +16,7 @@ import { LocalSignInDialogComponent }   from "./local-sign-in-dialog.component";
 import { LocalSignUpDialogComponent }   from "./local-sign-up-dialog.component";
 import { SignInLandingDialogComponent } from "./sign-in-landing-dialog.component";
 import { User }                         from "./user";
+import { OAuthService }                 from "./o-auth.service";
 
 @Injectable()
 export class UserService {
@@ -31,7 +32,8 @@ export class UserService {
 
   constructor(
     private dialog: MatDialog,
-    private afAuth: AngularFireAuth
+    private afAuth: AngularFireAuth,
+    private oAuth: OAuthService
   ) {
     // Get a promise for authentication being loaded
     // When it resolves, set the boolean to true
@@ -130,7 +132,7 @@ export class UserService {
   }
 
   async signInWithGoogleRedirect(): Promise<void> {
-    await this.afAuth.auth.signInWithRedirect(new firebase.auth.GoogleAuthProvider());
+    this.oAuth.signInWithGoogle();
   }
 
   async signOut(): Promise<void> {

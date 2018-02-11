@@ -1,6 +1,6 @@
 // Theme the tag-input component
 @import "theme.sass";
-@import "../../node_modules/ngx-chips/dist/modules/core/styles/core/core.scss";
+@import "../../node_modules/ngx-chips/core/styles/core/_core.scss";
 
 $ngx-chips-theme: (
   container-border-bottom-focused: 2px solid mat-color($primary) !important

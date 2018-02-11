@@ -30,7 +30,7 @@ export class ShoppingListService {
     userId: string
   ): AngularFirestoreCollection<ShoppingList> {
     return this.afs.collection<ShoppingList>("lists",
-      (ref: firestore.Query) => ref.where("meta.ownerId", "==", userId)
+      (ref) => ref.where("meta.ownerId", "==", userId)
     );
   }
 
