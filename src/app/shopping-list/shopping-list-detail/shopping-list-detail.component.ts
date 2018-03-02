@@ -75,7 +75,6 @@ export class ShoppingListDetailComponent implements OnInit, OnDestroy {
   }
 
   updateFormModel(list: ShoppingList): void {
-    console.log(`[debug] new data model`, list);
     this.listForm.reset({
       name: list.name
     });
@@ -126,7 +125,6 @@ export class ShoppingListDetailComponent implements OnInit, OnDestroy {
 
   // Update the server
   updateExternal(list: ShoppingList) {
-    console.log("[debug][detail] update list to", list);
     this.listService.updateList(this.listId, list);
   }
 }

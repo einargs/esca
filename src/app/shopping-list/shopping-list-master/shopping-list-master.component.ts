@@ -21,7 +21,7 @@ export class ShoppingListMasterComponent implements OnInit {
   ngOnInit() {
     this.listIds = this.userService.userIdSubject.pipe(
       switchMap(userId => this.listService.getIdsOfViewableLists(userId))
-    )
+    );
   }
 
   newList() {
